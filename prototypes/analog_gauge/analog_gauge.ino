@@ -4,21 +4,22 @@
 #include "gauge.h"
 
 Gauge* gauge;
-float value = 0;
+float value = 30;
 
 void setup() 
 {
   M5.begin();
 
-  gauge = new Gauge("Oil", 0, 100);
+  gauge = new Gauge("Oil", "deg C", 30, 130);
+  //gauge->SetSize(20, 20, 100, 100);
 }
 
 void loop() 
 {
   value += 0.1;
-  if (value > 100)
+  if (value > 130)
   {
-    value = 0;
+    value = 30;
   }
   gauge->Update(value);
 }
