@@ -24,5 +24,9 @@ void AslManager::Update()
         {
             ShiftX.Process(rxFrame);
         }
+        else if (rxFrame.identifier >= ASL_TIREX_BASE_ID && rxFrame.identifier <= ASL_TIREX_MAX_ID)
+        {
+            TireX.Process(rxFrame);
+        }
     }
 }

@@ -7,20 +7,20 @@ void AslShiftX3::Process(CanFrame in)
     // hardware details
     if (in.identifier == ASL_SHIFTX3_INF_ANNOUNCE)
     {
-        if (!DetailsUpdated)
+        if (!m_detailsUpdated)
         {
-            DetailsUpdated = true;
-            LedCount = in.data[0];
-            AlertCount = in.data[1];
-            BarGraphLength = in.data[2];
-            FirmwareMajor = in.data[3];
-            FirmwareMinor = in.data[4];
-            FirmwarePatch = in.data[5];
+            m_detailsUpdated = true;
+            m_config.LedCount = in.data[0];
+            m_config.AlertCount = in.data[1];
+            m_config.BarGraphLength = in.data[2];
+            m_config.FirmwareMajor = in.data[3];
+            m_config.FirmwareMinor = in.data[4];
+            m_config.FirmwarePatch = in.data[5];
         }
                     
-        if (!Connected)
+        if (!m_connected)
         {
-            Connected = true;
+            m_connected = true;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -30,9 +30,9 @@ void AslShiftX3::Process(CanFrame in)
     // button state change
     else if (in.identifier == ASL_SHIFTX3_INF_BUTTON)
     {
-        if (!Connected)
+        if (!m_connected)
         {
-            Connected = true;
+            m_connected = true;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -48,15 +48,30 @@ void AslShiftX3::Process(CanFrame in)
     // firmware version info
     else if (in.identifier == ASL_SHIFTX3_INF_STATS)
     {
-        if (!Connected)
+        if (!m_connected)
         {
-            Connected = true;
+            m_connected = true;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
             }
         }
     }
+}
+
+bool AslShiftX3::GetConnected()
+{
+    return m_connected;
+}
+
+bool AslShiftX3::GetDetailsupdated()
+{
+    return m_detailsUpdated;
+}
+
+AslShiftX3HardwareConfig AslShiftX3::GetConfig()
+{
+    return m_config;
 }
 
 void AslShiftX3::RegisterButtonCallback(void (*callback)(int, bool))
@@ -68,7 +83,7 @@ void AslShiftX3::RegisterConnectCallback(void (*callback)())
 {
     m_connectCallback = callback;
     // call the callback immediately if already connected
-    if (Connected)
+    if (m_connected)
     {
         m_connectCallback();
     }
@@ -111,8 +126,8 @@ bool AslShiftX3::SetConfiguration(int brightness, int autoBrightScaling, bool di
 
 bool AslShiftX3::SetLed(int startIndex, int count, byte r, byte g, byte b, int flashHz)
 {
-    startIndex = limit(startIndex, 0, BarGraphLength - 1);
-    count = limit(count, 0, BarGraphLength);
+    startIndex = limit(startIndex, 0, m_config.BarGraphLength - 1);
+    count = limit(count, 0, m_config.BarGraphLength);
     flashHz = limit(flashHz, 0, 10);
 
     CanFrame txFrame = {0};
@@ -131,7 +146,7 @@ bool AslShiftX3::SetLed(int startIndex, int count, byte r, byte g, byte b, int f
 
 bool AslShiftX3::SetAlert(int index, byte r, byte g, byte b, int flashHz)
 {
-    index = limit(index, 0, AlertCount - 1);
+    index = limit(index, 0, m_config.AlertCount - 1);
     flashHz = limit(flashHz, 0, 10);
 
     CanFrame txFrame = {0};
@@ -149,7 +164,7 @@ bool AslShiftX3::SetAlert(int index, byte r, byte g, byte b, int flashHz)
 
 bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, byte r, byte g, byte b, int flashHz)
 {
-    index = limit(index, 0, AlertCount - 1);
+    index = limit(index, 0, m_config.AlertCount - 1);
     id = limit(id, 0, 4);
     flashHz = limit(flashHz, 0, 10);
 
@@ -171,7 +186,7 @@ bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, by
 
 bool AslShiftX3::SetAlertValue(int index, unsigned int value)
 {
-    index = limit(index, 0, AlertCount - 1);
+    index = limit(index, 0, m_config.AlertCount - 1);
 
     CanFrame txFrame = {0};
     txFrame.identifier = ASL_SHIFTX3_SET_ALRT_VAL;
@@ -212,13 +227,13 @@ bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high, float 
     // figure outhow many lights should be full on, 
     // what fraction the next one should be on, and
     // how many should be off
-    int full = floor(norm * BarGraphLength);
-    float frac = norm * BarGraphLength - full;
+    int full = floor(norm * m_config.BarGraphLength);
+    float frac = norm * m_config.BarGraphLength - full;
 
     int solidStart, partialStart, blankStart;
     if (reverse)
     {
-        solidStart = BarGraphLength - full;
+        solidStart = m_config.BarGraphLength - full;
         partialStart = solidStart - 1;
         blankStart = 0;
     }
@@ -235,13 +250,13 @@ bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high, float 
     {
         result = SetLed(solidStart, full, r, g, b, flashHz);
     }
-    if (result && (full < BarGraphLength))
+    if (result && (full < m_config.BarGraphLength))
     {
         result = SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
     }
-    if (result && (full < (BarGraphLength - 1)))
+    if (result && (full < (m_config.BarGraphLength - 1)))
     {
-        result = SetLed(blankStart, BarGraphLength - full - 1, 0, 0, 0, 0);
+        result = SetLed(blankStart, m_config.BarGraphLength - full - 1, 0, 0, 0, 0);
     }
     return result;
 }

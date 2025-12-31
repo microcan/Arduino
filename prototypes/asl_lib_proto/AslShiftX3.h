@@ -3,6 +3,20 @@
 
 #include <ESP32-TWAI-CAN.hpp>
 
+struct AslShiftX3HardwareConfig
+{
+    // LED count includes the alert LEDs
+    int LedCount = 9;
+    // The number of Alert LEDs
+    int AlertCount = 2;
+    // The number of LEDs in the linear graph
+    int BarGraphLength = 7;
+    // Firmware details get populated by the Announce or Stats messages
+    int FirmwareMajor = 0;
+    int FirmwareMinor = 0;
+    int FirmwarePatch = 0;
+};
+
 class AslShiftX3
 {
     private:
@@ -10,22 +24,20 @@ class AslShiftX3
     void (*m_buttonCallback)(int, bool) = nullptr;
     void (*m_connectCallback)() = nullptr;
 
+    AslShiftX3HardwareConfig m_config;
+    bool m_detailsUpdated = false;
+    bool m_connected = false;
+    
     public:
 
-    // LED count includes the alert LEDs
-    int LedCount = 9;
-    // The number of Alert LEDs
-    int AlertCount = 2;
-    // The number of LEDs in the linear graph
-    int BarGraphLength = 7;
-    // Becomes true when the hardware Announce message is received
-    bool DetailsUpdated = false;
     // Becomes true when any notification is received from the module
-    bool Connected = false;
-    // Firmware details get populated by the Announce or Stats messages
-    int FirmwareMajor = 0;
-    int FirmwareMinor = 0;
-    int FirmwarePatch = 0;
+    bool GetConnected();
+
+    // Becomes true when the hardware Announce message is received
+    bool GetDetailsupdated();
+
+    // Get the hardware config
+    AslShiftX3HardwareConfig GetConfig();
 
     // Called by the manager, process a notification message from the module
     void Process(CanFrame frame);

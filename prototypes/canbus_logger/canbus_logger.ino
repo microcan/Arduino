@@ -2,8 +2,13 @@
 #include <ESP32-TWAI-CAN.hpp>
 #include <M5GFX.h>
 
-#define CAN_TX 17
-#define CAN_RX 16
+// Core Basic
+//#define CAN_TX 17
+//#define CAN_RX 16
+
+// Tab5
+#define CAN_TX 6
+#define CAN_RX 7
 
 int g_lastStamp = 0;
 

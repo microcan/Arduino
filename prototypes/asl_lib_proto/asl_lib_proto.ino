@@ -2,6 +2,14 @@
 #include <M5GFX.h>
 #include <M5Unified.h>
 
+// Core Basic
+//#define CAN_TX 17
+//#define CAN_RX 16
+
+// Tab5
+#define CAN_TX 6
+#define CAN_RX 7
+
 AslManager asl;
 bool displayOnTop = true;
 
@@ -20,8 +28,9 @@ void OnButton(int button, bool down)
 
 void OnConnect()
 {
-  M5.Lcd.printf("LEDs: %d, Alerts: %d, Length: %d\n", asl.ShiftX.LedCount, asl.ShiftX.AlertCount, asl.ShiftX.BarGraphLength);
-  M5.Lcd.printf("Firmware: %d.%d.%d\n", asl.ShiftX.FirmwareMajor, asl.ShiftX.FirmwareMinor, asl.ShiftX.FirmwarePatch);
+  AslShiftX3HardwareConfig config = asl.ShiftX.GetConfig();
+  M5.Lcd.printf("LEDs: %d, Alerts: %d, Length: %d\n", config.LedCount, config.AlertCount, config.BarGraphLength);
+  M5.Lcd.printf("Firmware: %d.%d.%d\n", config.FirmwareMajor, config.FirmwareMinor, config.FirmwarePatch);
 
   asl.ShiftX.SetConfiguration(0, 61, displayOnTop);
 
@@ -43,13 +52,13 @@ void setup()
 {
   M5.begin();
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextSize(2);
   M5.Lcd.setTextScroll(true);
 
   asl.ShiftX.RegisterButtonCallback(OnButton);
   asl.ShiftX.RegisterConnectCallback(OnConnect);
 
-  if (asl.Connect(17, 16))
+  if (asl.Connect(CAN_TX, CAN_RX))
   {
     M5.Lcd.printf("ASL manager connected.\n");
   }
@@ -67,14 +76,13 @@ void loop()
   asl.Update();
   
   unsigned long now = millis();
-  if (now - last > 500)
+  if (now - last > 200)
   {
     last = now;
     slowCount++;
     asl.ShiftX.SetDisplay(slowCount % 10);
     asl.ShiftX.SetAlertValue(0, slowCount % 10);
     asl.ShiftX.SetAlertValue(1, slowCount % 20);
-    asl.ShiftX.SetCustomLinearGraph(slowCount % 100, 20, 100, 95, displayOnTop);
+    asl.ShiftX.SetCustomLinearGraph(asl.TireX.Temps[FL][4], 50, 60, 60, displayOnTop);
   }
-
 }
