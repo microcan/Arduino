@@ -57,10 +57,6 @@ void AslShiftX3::Process(CanFrame in)
             }
         }
     }
-    else
-    {
-        //M5.Lcd.printf("Unknown message ID: %X\n", in.identifier);
-    }
 }
 
 void AslShiftX3::RegisterButtonCallback(void (*callback)(int, bool))
@@ -188,40 +184,65 @@ bool AslShiftX3::SetAlertValue(int index, unsigned int value)
     return ESP32Can.writeFrame(txFrame);   
 }
 
-bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high)
+bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high, float flashThreshold, bool reverse)
 {
     byte r, g, b;
-    float norm = (value - low) / (high - low);
-    // blue - 0
-    // green - 0.5
-    // orange - 0.75
-    // red - 1.0
-    if (norm <= 0.5)
+
+    if (high <= low)
     {
-        float miniNorm = norm * 2.0;
-        r = 0;
-        g = 255.0 * (miniNorm);
-        b = 255.0 * (1.0 - miniNorm);
+        return false;
     }
-    else if (norm <= 0.75)
+
+    // limit, normalize and colorize.
+    value = limit(value, low, high);
+    float norm = (value - low) / (high - low);
+    colorize(norm, r, g, b);
+
+    // should we flash?
+    int flashHz;
+    if (value < flashThreshold)
     {
-        float miniNorm = (norm - 0.5) * 4.0;
-        r = 255.0 * miniNorm;
-        g = 255.0 * (1.0 - miniNorm) + 165.0 * (miniNorm);
-        b = 0;
+        flashHz = 0;
     }
     else
     {
-        float miniNorm = (norm - 0.75) * 4.0;
-        r = 255.0;
-        g = 165.0 * (1.0 - miniNorm);
-        b = 0;
+        flashHz = 10;
     }
 
+    // figure outhow many lights should be full on, 
+    // what fraction the next one should be on, and
+    // how many should be off
     int full = floor(norm * BarGraphLength);
     float frac = norm * BarGraphLength - full;
 
-    SetLed(0, full, r, g, b, 0);
-    SetLed(full, 1, r * frac, g * frac, b * frac, 0);
+    int solidStart, partialStart, blankStart;
+    if (reverse)
+    {
+        solidStart = BarGraphLength - full;
+        partialStart = solidStart - 1;
+        blankStart = 0;
+    }
+    else
+    {
+        solidStart = 0;
+        partialStart = full;
+        blankStart = full + 1;
+    }
+
+    // set the lights
+    bool result = true;
+    if (full > 0)
+    {
+        result = SetLed(solidStart, full, r, g, b, flashHz);
+    }
+    if (result && (full < BarGraphLength))
+    {
+        result = SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
+    }
+    if (result && (full < (BarGraphLength - 1)))
+    {
+        result = SetLed(blankStart, BarGraphLength - full - 1, 0, 0, 0, 0);
+    }
+    return result;
 }
 

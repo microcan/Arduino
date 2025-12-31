@@ -12,17 +12,32 @@ class AslShiftX3
 
     public:
 
+    // LED count includes the alert LEDs
     int LedCount = 9;
+    // The number of Alert LEDs
     int AlertCount = 2;
+    // The number of LEDs in the linear graph
     int BarGraphLength = 7;
+    // Becomes true when the hardware Announce message is received
     bool DetailsUpdated = false;
+    // Becomes true when any notification is received from the module
     bool Connected = false;
+    // Firmware details get populated by the Announce or Stats messages
     int FirmwareMajor = 0;
     int FirmwareMinor = 0;
     int FirmwarePatch = 0;
 
+    // Called by the manager, process a notification message from the module
     void Process(CanFrame frame);
-    void RegisterButtonCallback(void (*callback)(int, bool));
+
+    // Register a function to get notified on button state changes
+    // button: 0-1, which button was pressed
+    // down: true means button down event, false means button up event
+    void RegisterButtonCallback(void (*callback)(int button, bool down));
+
+    // Register a function to get notified when the first notification
+    // is received from the module.  Put your initialization code
+    // here to mak sure it is received by the module
     void RegisterConnectCallback(void (*callback)());
 
     // Control the shiftx3 hardware, see:
@@ -66,7 +81,14 @@ class AslShiftX3
     // value: >=0, the value to be comapred to the thresholds that have been set
     bool SetAlertValue(int index, unsigned int value);
 
-    bool SetCustomLinearGraph(float value, float low, float high);
+    // Custom method to set the bar graph as a shift indicator, directly setting the LEDs
+    // value: >= 0, can be outside low and high.  Typically provide RPM as value
+    // low: >= 0, if value is less or equal to low, then no lights are on
+    // high: > low, lights turn on from none at low to all at high, and colors go from blue to green
+    //         to orange to red at high.  all lights on an red for value >= high
+    // flashThreshold: > 0, if value is above flashThreshold, all lights flasg at 10Hz
+    // reverse: you need to control this, use true for left to right with displayOnTop set in SetConfiguration.
+    bool SetCustomLinearGraph(float value, float low, float high, float flashThreshold, bool reverse);
 };
 
 #endif

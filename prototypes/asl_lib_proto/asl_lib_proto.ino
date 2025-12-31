@@ -3,6 +3,7 @@
 #include <M5Unified.h>
 
 AslManager asl;
+bool displayOnTop = true;
 
 void OnButton(int button, bool down)
 {
@@ -22,7 +23,7 @@ void OnConnect()
   M5.Lcd.printf("LEDs: %d, Alerts: %d, Length: %d\n", asl.ShiftX.LedCount, asl.ShiftX.AlertCount, asl.ShiftX.BarGraphLength);
   M5.Lcd.printf("Firmware: %d.%d.%d\n", asl.ShiftX.FirmwareMajor, asl.ShiftX.FirmwareMinor, asl.ShiftX.FirmwarePatch);
 
-  asl.ShiftX.SetConfiguration(10, 61, false);
+  asl.ShiftX.SetConfiguration(0, 61, displayOnTop);
 
   asl.ShiftX.SetAlertThreshold(0, 0, 0,   0,   0, 255, 0);
   asl.ShiftX.SetAlertThreshold(0, 1, 2,   0, 255, 255, 0);
@@ -66,13 +67,14 @@ void loop()
   asl.Update();
   
   unsigned long now = millis();
-  if (now - last > 1000)
+  if (now - last > 500)
   {
     last = now;
     slowCount++;
     asl.ShiftX.SetDisplay(slowCount % 10);
     asl.ShiftX.SetAlertValue(0, slowCount % 10);
     asl.ShiftX.SetAlertValue(1, slowCount % 20);
+    asl.ShiftX.SetCustomLinearGraph(slowCount % 100, 20, 100, 95, displayOnTop);
   }
 
 }
