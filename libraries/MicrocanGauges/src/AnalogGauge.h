@@ -5,6 +5,7 @@
 #include <M5Unified.h>
 #include <Microcan.h>
 
+// Place an analog gauge on the screen that automatically tracks a WatchedValue
 class AnalogGauge
 {
 private:
@@ -24,15 +25,29 @@ private:
     int m_bigFont;
     float m_oldValue;
     float m_maxChange;
+    uint16_t m_dialColor;
     bool m_first = true;
 
 public:
+    // Construct with the value to watch
+    // label: the short name for the gauge, like "Oil" or "RPM"
+    // units: the short ASCII units to display like "deg C" or ""
+    // watched: the value that will place the needle, and set the number on the ticks from it the range
     AnalogGauge(String label, String units, WatchedValue &watched);
+
+    // Screen pixel size and placement for the gauge
+    // x, y: top left corner of the gauge in pixels
+    // w, h: width and height in pixels
     void SetSize(int x, int y, int w, int h);
+
+    // Call this in your loop
     void Update();
 
 private:
     void SetFontSize(int points);
+    void DrawStatic();
+    void DrawDynamic();
+    void DrawNeedle(float normPos, float length, float baseThick, float tipThick, uint16_t color);
 };
 
 #endif

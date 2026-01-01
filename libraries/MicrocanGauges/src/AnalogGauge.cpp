@@ -1,5 +1,24 @@
 #include "AnalogGauge.h"
 
+
+#define LEFT 210.0
+#define RIGHT -30.0
+#define SWEEP (LEFT - RIGHT)
+#define DEG2RAD 0.0174532925199
+#define SML_TICK_COUNT 16
+#define SML_TICK_INNER 0.94
+#define SML_TICK_OUTER 1.00
+#define LRG_TICK_COUNT 4
+#define LRG_TICK_INNER 0.92
+#define LRG_TICK_OUTER 1.00
+#define LRG_TICK_THICK 1.5
+#define NDL_LNTH 0.89
+#define NDL_BASE 0.2
+#define NDL_TIP 1.0
+#define TICK_LBL_RAD 0.75
+#define NAME_Y 0.5
+#define UNIT_Y 0.35
+
 AnalogGauge::AnalogGauge(String label, String units, WatchedValue &watched)
 {
   m_canvas = new M5Canvas(&M5.Lcd);
@@ -8,6 +27,7 @@ AnalogGauge::AnalogGauge(String label, String units, WatchedValue &watched)
   m_label = label;
   m_oldValue = 0;
   m_maxChange = 0.05;
+  m_dialColor = TFT_WHITE;
   SetSize(0, 0, M5.Lcd.width(), M5.Lcd.height());
 }
 
@@ -29,7 +49,7 @@ void AnalogGauge::SetSize(int x, int y, int w, int h)
     m_medFont = 40;
     m_smallFont = 24;
   }
-  else if (m_r > 100)
+  else if (m_r > 130)
   {
     m_bigFont = 40;
     m_medFont = 24;
@@ -52,110 +72,127 @@ void AnalogGauge::SetSize(int x, int y, int w, int h)
 
 void AnalogGauge::Update()
 {
-  m_canvas->createSprite(m_w, m_h);
   if (m_first)
   {
-    m_canvas->fillSprite(TFT_BLACK);
-    m_canvas->fillCircle(m_cx, m_cy, m_r, M5.Display.color565(120, 120, 120));
-    m_canvas->fillCircle(m_cx, m_cy, m_r - 4, TFT_WHITE);
+    DrawStatic();
+    m_first = false;
   }
-  else
-  {
-    m_canvas->fillSprite(TFT_TRANSPARENT);
-  }
+  DrawDynamic();
+}
 
-  // angle range for tick marks
-  float min = -30;
-  float max = 210;
+void AnalogGauge::DrawStatic()
+{
+  float angle, sinA, cosA, x0, y0, x1, y1, x2, y2, x3, y3;
+
+  m_canvas->createSprite(m_w, m_h);
+
+  m_canvas->fillSprite(TFT_BLACK);
+  m_canvas->fillCircle(m_cx, m_cy, m_r, M5.Display.color565(120, 120, 120));
+  m_canvas->fillCircle(m_cx, m_cy, m_r - 4, m_dialColor);
 
   // minor tick marks
-  if (m_first)
+  for (int i = 0; i <= SML_TICK_COUNT; i++)
   {
-    for (int i = 0; i <= 16; i++)
-    {
-      float angle = min + (max - min) / 16 * i;
-      float sinA = sin(angle * 0.0174532925);
-      float cosA = cos(angle * 0.0174532925);
+    angle = RIGHT + SWEEP / SML_TICK_COUNT * i;
+    sinA = sin(angle * DEG2RAD);
+    cosA = cos(angle * DEG2RAD);
 
-      float x0 = cosA * m_r;
-      float y0 = -sinA * m_r;
-      float x1 = x0 * 0.94 + m_cx;
-      float y1 = y0 * 0.94 + m_cy;
-      x0 += m_cx;
-      y0 += m_cy;
-      m_canvas->drawLine(x0, y0, x1, y1, TFT_BLACK);
-    }
+    x0 = cosA * m_r * SML_TICK_OUTER + m_cx;
+    y0 = -sinA * m_r * SML_TICK_OUTER + m_cy;
+    x1 = cosA * m_r * SML_TICK_INNER + m_cx;
+    y1 = -sinA * m_r * SML_TICK_INNER + m_cy;
+
+    m_canvas->drawLine(x0, y0, x1, y1, TFT_BLACK);
   }
 
-  // clear old needle display
-  float thick = m_r / 4.9;
-  float norm = m_oldValue;
-  float angle = max - (max - min) * norm - 4;
-  float sx = sin(angle * 0.0174532925);
-  float cx = cos(angle * 0.0174532925);
-  float x0 = m_cx + 0.9 * cx * m_r;
-  float y0 = m_cy - 0.9 * sx * m_r;
-  angle += 93;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
+  // major tick marks as rectangles
+  for (int i = 0; i <= LRG_TICK_COUNT; i++)
+  {
+    angle = RIGHT + SWEEP / LRG_TICK_COUNT * i;
+    sinA = sin((angle - LRG_TICK_THICK) * DEG2RAD);
+    cosA = cos((angle - LRG_TICK_THICK) * DEG2RAD);
+    x0 = cosA * m_r * LRG_TICK_INNER + m_cx;
+    y0 = -sinA * m_r * LRG_TICK_INNER + m_cy;
+    x1 = cosA * m_r * LRG_TICK_OUTER + m_cx;
+    y1 = -sinA * m_r * LRG_TICK_OUTER + m_cy;
+
+    sinA = sin((angle + LRG_TICK_THICK) * DEG2RAD);
+    cosA = cos((angle + LRG_TICK_THICK) * DEG2RAD);
+    x2 = cosA * m_r * LRG_TICK_OUTER + m_cx;
+    y2 = -sinA * m_r * LRG_TICK_OUTER + m_cy;
+    x3 = cosA * m_r * LRG_TICK_INNER + m_cx;
+    y3 = -sinA * m_r * LRG_TICK_INNER + m_cy;
+
+    m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, M5.Display.color565(80, 80, 80));
+    m_canvas->fillTriangle(x3, y3, x0, y0, x2, y2, M5.Display.color565(80, 80, 80));
+  }
+
+  m_canvas->setTextColor(TFT_BLACK, m_dialColor);
+  SetFontSize(m_bigFont);
+  m_canvas->setTextDatum(textdatum_t::top_center);
+  m_canvas->drawString(m_label, m_cx, m_cy + m_r * NAME_Y);
+  m_canvas->pushSprite(m_x, m_y);
+  m_canvas->deleteSprite();
+}
+
+void AnalogGauge::DrawNeedle(float normPos, float length, float baseThick, float tipThick, uint16_t color)
+{
+  float thick = baseThick * m_r;
+  float angle = LEFT - SWEEP * normPos - tipThick;
+  float sx = sin(angle * DEG2RAD);
+  float cx = cos(angle * DEG2RAD);
+  float x0 = m_cx + length * cx * m_r;
+  float y0 = m_cy - length * sx * m_r;
+  angle += 90 + tipThick;
+  sx = sin(angle * DEG2RAD);
+  cx = cos(angle * DEG2RAD);
   float x1 = thick * cx + m_cx;
   float y1 = -thick * sx + m_cy;
   angle -= 180;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
+  sx = sin(angle * DEG2RAD);
+  cx = cos(angle * DEG2RAD);
   float x2 = thick * cx + m_cx;
   float y2 = -thick * sx + m_cy;
-  angle = max - (max - min) * norm + 3;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
-  float x4 = m_cx + 0.9 * cx * m_r;
-  float y4 = m_cy - 0.9 * sx * m_r;
+  angle = LEFT - SWEEP * normPos + tipThick;
+  sx = sin(angle * DEG2RAD);
+  cx = cos(angle * DEG2RAD);
+  float x4 = m_cx + length * cx * m_r;
+  float y4 = m_cy - length * sx * m_r;
 
-  m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, TFT_WHITE);
-  m_canvas->fillTriangle(x0, y0, x4, y4, x1, y1, TFT_WHITE);
+  m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, color);
+  m_canvas->fillTriangle(x0, y0, x4, y4, x1, y1, color);
+}
 
-  // major tick marks as rectangles
-  for (int i = 0; i <= 4; i++)
+void AnalogGauge::DrawDynamic()
+{
+  m_canvas->createSprite(m_w, m_h);
+  m_canvas->fillSprite(TFT_TRANSPARENT);
+
+  // clear old needle display
+  DrawNeedle(m_oldValue, NDL_LNTH + 0.01, NDL_BASE + 0.05, NDL_TIP + 2, m_dialColor);
+
+  // major tick mark labels
+  for (int i = 0; i <= LRG_TICK_COUNT; i++)
   {
-    float angle = min + (max - min) / 4 * i;
-    float sx = sin(angle * 0.0174532925);
-    float cx = cos(angle * 0.0174532925);
+    float angle = RIGHT + SWEEP / LRG_TICK_COUNT * i;
+    float sx = sin(angle * DEG2RAD);
+    float cx = cos(angle * DEG2RAD);
 
     // tick number labels
-    float x0 = cx * m_r * 0.65 + m_cx;
-    float y0 = -sx * m_r * 0.65 + m_cy;
-    float mark = m_watched->High - m_watched->Range() / 4 * i;
-    m_canvas->setTextColor(TFT_BLACK, TFT_WHITE);
+    float x0 = cx * m_r * TICK_LBL_RAD + m_cx;
+    float y0 = -sx * m_r * TICK_LBL_RAD + m_cy;
+    float mark = m_watched->High - m_watched->Range() / LRG_TICK_COUNT * i;
+    m_canvas->setTextColor(TFT_BLACK, m_dialColor);
     SetFontSize(m_smallFont);
     m_canvas->setTextDatum(textdatum_t::middle_center);
     m_canvas->drawNumber(mark, x0, y0);
-
-    if (m_first)
-    {
-      // triangle tick marks
-      sx = sin((angle - 1.5) * 0.0174532925);
-      cx = cos((angle - 1.5) * 0.0174532925);
-      x0 = cx * m_r * 0.92 + m_cx;
-      y0 = -sx * m_r * 0.92 + m_cy;
-      float x1 = cx * (m_r - 3) + m_cx;
-      float y1 = -sx * (m_r - 3) + m_cy;
-      sx = sin((angle + 1.5) * 0.0174532925);
-      cx = cos((angle + 1.5) * 0.0174532925);
-      float x2 = cx * (m_r - 3) + m_cx;
-      float y2 = -sx * (m_r - 3) + m_cy;
-      float x3 = cx * m_r * 0.92 + m_cx;
-      float y3 = -sx * m_r * 0.92 + m_cy;
-
-      m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, M5.Display.color565(80, 80, 80));
-      m_canvas->fillTriangle(x3, y3, x0, y0, x2, y2, M5.Display.color565(80, 80, 80));
-    }
   }
 
   // units text
-  m_canvas->setTextColor(TFT_BLACK, TFT_WHITE);
+  m_canvas->setTextColor(TFT_BLACK, m_dialColor);
   SetFontSize(m_medFont);
   m_canvas->setTextDatum(textdatum_t::middle_center);
-  m_canvas->drawString(m_units, m_cx, m_cy - m_r * 0.35);
+  m_canvas->drawString(m_units, m_cx, m_cy - m_r * UNIT_Y);
 
   // draw the needle
   float value = m_watched->Normalized();
@@ -171,49 +208,17 @@ void AnalogGauge::Update()
     value = m_oldValue - m_maxChange;
   }
 
-  thick = m_r / 5;
-  norm = value;
-  angle = max - (max - min) * norm - 1;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
-  x0 = m_cx + 0.89 * cx * m_r;
-  y0 = m_cy - 0.89 * sx * m_r;
-  angle += 91;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
-  x1 = thick * cx + m_cx;
-  y1 = -thick * sx + m_cy;
-  angle -= 180;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
-  x2 = thick * cx + m_cx;
-  y2 = -thick * sx + m_cy;
-  angle = max - (max - min) * norm + 1;
-  sx = sin(angle * 0.0174532925);
-  cx = cos(angle * 0.0174532925);
-  x4 = m_cx + 0.89 * cx * m_r;
-  y4 = m_cy - 0.89 * sx * m_r;
-
   byte r, g, b;
   m_watched->Color(r, g, b);
-  m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, M5.Display.color565(r, b, g));
-  m_canvas->fillTriangle(x0, y0, x4, y4, x1, y1, M5.Display.color565(r, b, g));
-  m_canvas->fillCircle(m_cx, m_cy, thick + 2, TFT_BLACK);
+  DrawNeedle(value, NDL_LNTH, NDL_BASE, NDL_TIP, M5.Display.color565(r, b, g));
+
+  // middle button
+  m_canvas->fillCircle(m_cx, m_cy, NDL_BASE * m_r + 2, TFT_BLACK);
 
   m_oldValue = value;
 
-  if (m_first)
-  {
-    // label text
-    m_canvas->setTextColor(TFT_BLACK, TFT_WHITE);
-    SetFontSize(m_bigFont);
-    m_canvas->setTextDatum(textdatum_t::top_center);
-    m_canvas->drawString(m_label, m_cx, m_cy + m_r / 2);
-  }
-
   m_canvas->pushSprite(m_x, m_y, TFT_TRANSPARENT);
   m_canvas->deleteSprite();
-  m_first = false;
 }
 
 void AnalogGauge::SetFontSize(int points)
