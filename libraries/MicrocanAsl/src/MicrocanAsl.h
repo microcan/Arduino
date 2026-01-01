@@ -3,4 +3,6 @@
 
 #include "AslManager.h"
 
+extern AslManager ASL;
+
 #endif

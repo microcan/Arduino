@@ -1,15 +1,15 @@
-#ifndef GAUGE_H
-#define GAUGE_H
+#ifndef ANALOG_GAUGE_H
+#define ANALOG_GAUGE_H
 
 #include <M5GFX.h>
 #include <M5Unified.h>
 
-class Gauge
+class AnalogGauge
 {
     private:
     M5Canvas* m_canvas;
-    float m_min;
-    float m_max;
+    float m_low;
+    float m_high;
     String m_label;
     String m_units;
     int m_x;
@@ -24,9 +24,10 @@ class Gauge
     int m_bigFont;
     int m_oldValue;
     int m_maxChange;
+    bool m_first = true;
 
     public:
-    Gauge(String label, String units, float min, float max);
+    AnalogGauge(String label, String units, float low, float high);
     void SetSize(int x, int y, int w, int h);
     void Update(float value);
 
