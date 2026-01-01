@@ -1,5 +1,4 @@
 #include "AslShiftX3.h"
-#include "MicrocanCommon.h"
 #include "AslCommon.h"
 
 void AslShiftX3::Process(CanFrame in)
@@ -17,7 +16,7 @@ void AslShiftX3::Process(CanFrame in)
             m_config.FirmwareMinor = in.data[4];
             m_config.FirmwarePatch = in.data[5];
         }
-                    
+
         if (!m_connected)
         {
             m_connected = true;
@@ -117,11 +116,11 @@ bool AslShiftX3::SetConfiguration(int brightness, int autoBrightScaling, bool di
     {
         txFrame.data[2] = 1;
     }
-    else 
+    else
     {
         txFrame.data[2] = 0;
     }
-    return ESP32Can.writeFrame(txFrame);   
+    return ESP32Can.writeFrame(txFrame);
 }
 
 bool AslShiftX3::SetLed(int startIndex, int count, byte r, byte g, byte b, int flashHz)
@@ -141,7 +140,7 @@ bool AslShiftX3::SetLed(int startIndex, int count, byte r, byte g, byte b, int f
     txFrame.data[4] = b;
     txFrame.data[5] = flashHz;
 
-    return ESP32Can.writeFrame(txFrame);   
+    return ESP32Can.writeFrame(txFrame);
 }
 
 bool AslShiftX3::SetAlert(int index, byte r, byte g, byte b, int flashHz)
@@ -159,7 +158,7 @@ bool AslShiftX3::SetAlert(int index, byte r, byte g, byte b, int flashHz)
     txFrame.data[3] = b;
     txFrame.data[4] = flashHz;
 
-    return ESP32Can.writeFrame(txFrame);   
+    return ESP32Can.writeFrame(txFrame);
 }
 
 bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, byte r, byte g, byte b, int flashHz)
@@ -181,7 +180,7 @@ bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, by
     txFrame.data[6] = b;
     txFrame.data[7] = flashHz;
 
-    return ESP32Can.writeFrame(txFrame);   
+    return ESP32Can.writeFrame(txFrame);
 }
 
 bool AslShiftX3::SetAlertValue(int index, unsigned int value)
@@ -196,37 +195,50 @@ bool AslShiftX3::SetAlertValue(int index, unsigned int value)
     txFrame.data[1] = lowByte(value);
     txFrame.data[2] = highByte(value);
 
-    return ESP32Can.writeFrame(txFrame);   
+    return ESP32Can.writeFrame(txFrame);
 }
 
-bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high, float flashThreshold, bool reverse)
+bool AslShiftX3::SetAlertThresholds(int index, WatchedValue watched)
 {
     byte r, g, b;
 
-    if (high <= low)
-    {
-        return false;
-    }
+    watched.ColorForValue(watched.Low, r, g, b);
+    SetAlertThreshold(index, 0, watched.Low, r, g, b, 10);
 
-    // limit, normalize and colorize.
-    value = limit(value, low, high);
-    float norm = (value - low) / (high - low);
-    colorize(norm, r, g, b);
+    watched.ColorForValue(watched.LowAlarm, r, g, b);
+    SetAlertThreshold(index, 1, watched.LowAlarm, r, g, b, 0);
+
+    watched.ColorForValue(watched.LowNormal, r, g, b);
+    SetAlertThreshold(index, 2, watched.LowNormal, r, g, b, 0);
+
+    watched.ColorForValue(watched.HighNormal, r, g, b);
+    SetAlertThreshold(index, 3, watched.HighNormal, r, g, b, 0);
+
+    watched.ColorForValue(watched.HighAlarm, r, g, b);
+    SetAlertThreshold(index, 4, watched.HighAlarm, r, g, b, 10);
+}
+
+bool AslShiftX3::SetCustomLinearGraph(WatchedValue watch, bool reverse)
+{
+    byte r, g, b;
+
+    watch.Color(r, g, b);
 
     // should we flash?
     int flashHz;
-    if (value < flashThreshold)
-    {
-        flashHz = 0;
-    }
-    else
+    if (watch.HighAlarmActive())
     {
         flashHz = 10;
     }
+    else
+    {
+        flashHz = 0;
+    }
 
-    // figure outhow many lights should be full on, 
+    // figure outhow many lights should be full on,
     // what fraction the next one should be on, and
     // how many should be off
+    float norm = watch.Normalized();
     int full = floor(norm * m_config.BarGraphLength);
     float frac = norm * m_config.BarGraphLength - full;
 
@@ -260,4 +272,3 @@ bool AslShiftX3::SetCustomLinearGraph(float value, float low, float high, float 
     }
     return result;
 }
-

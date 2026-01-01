@@ -3,13 +3,13 @@
 
 #include <M5GFX.h>
 #include <M5Unified.h>
+#include <Microcan.h>
 
 class AnalogGauge
 {
-    private:
-    M5Canvas* m_canvas;
-    float m_low;
-    float m_high;
+private:
+    M5Canvas *m_canvas;
+    WatchedValue *m_watched;
     String m_label;
     String m_units;
     int m_x;
@@ -22,16 +22,16 @@ class AnalogGauge
     int m_smallFont;
     int m_medFont;
     int m_bigFont;
-    int m_oldValue;
-    int m_maxChange;
+    float m_oldValue;
+    float m_maxChange;
     bool m_first = true;
 
-    public:
-    AnalogGauge(String label, String units, float low, float high);
+public:
+    AnalogGauge(String label, String units, WatchedValue &watched);
     void SetSize(int x, int y, int w, int h);
-    void Update(float value);
+    void Update();
 
-    private:
+private:
     void SetFontSize(int points);
 };
 

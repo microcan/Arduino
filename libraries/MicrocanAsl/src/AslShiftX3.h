@@ -2,7 +2,9 @@
 #define ASL_SHIFTX3_H
 
 #include <ESP32-TWAI-CAN.hpp>
+#include <Microcan.h>
 
+// Struct for the hardware details in the Announce message
 struct AslShiftX3HardwareConfig
 {
     // LED count includes the alert LEDs
@@ -17,19 +19,18 @@ struct AslShiftX3HardwareConfig
     int FirmwarePatch = 0;
 };
 
+// Class to handle all the messages to and from the ShiftX3 hardware
 class AslShiftX3
 {
-    private:
-
+private:
     void (*m_buttonCallback)(int, bool) = nullptr;
     void (*m_connectCallback)() = nullptr;
 
     AslShiftX3HardwareConfig m_config;
     bool m_detailsUpdated = false;
     bool m_connected = false;
-    
-    public:
 
+public:
     // Becomes true when any notification is received from the module
     bool GetConnected();
 
@@ -49,11 +50,8 @@ class AslShiftX3
 
     // Register a function to get notified when the first notification
     // is received from the module.  Put your initialization code
-    // here to mak sure it is received by the module
+    // here to make sure it is received by the module
     void RegisterConnectCallback(void (*callback)());
-
-    // Control the shiftx3 hardware, see:
-    // https://wiki.autosportlabs.com/ShiftX3#ShiftX3_CAN_bus_API
 
     // Set the gear indicator LED to a number from 0 to 9
     // value: 0-9, gets displayed in the 7 segment 'gear indicator'
@@ -93,14 +91,15 @@ class AslShiftX3
     // value: >=0, the value to be comapred to the thresholds that have been set
     bool SetAlertValue(int index, unsigned int value);
 
+    // Automatically set Alert thresholds using the ranges specified in a WatchedValue class
+    // index: 0-1: the alert light to set up.
+    // watched: the class with the limits to use for alert thresholds.
+    bool SetAlertThresholds(int index, WatchedValue watched);
+
     // Custom method to set the bar graph as a shift indicator, directly setting the LEDs
-    // value: >= 0, can be outside low and high.  Typically provide RPM as value
-    // low: >= 0, if value is less or equal to low, then no lights are on
-    // high: > low, lights turn on from none at low to all at high, and colors go from blue to green
-    //         to orange to red at high.  all lights on an red for value >= high
-    // flashThreshold: > 0, if value is above flashThreshold, all lights flasg at 10Hz
+    // watch: the WatchedValue class with the current value and thresholds to make everything work.
     // reverse: you need to control this, use true for left to right with displayOnTop set in SetConfiguration.
-    bool SetCustomLinearGraph(float value, float low, float high, float flashThreshold, bool reverse);
+    bool SetCustomLinearGraph(WatchedValue watch, bool reverse);
 };
 
 #endif

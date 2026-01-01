@@ -2,10 +2,10 @@
 #include "AslTireX.h"
 
 // convert a sensor ID into a tire position
-bool id2Pos(unsigned int id, int& pos)
+bool id2Pos(unsigned int id, int &pos)
 {
   int test = highByte(id - ASL_TIREX_BASE_ID);
-  if (test >=0 && test < 4)
+  if (test >= 0 && test < 4)
   {
     pos = test;
     return true;
@@ -31,7 +31,7 @@ void AslTireX::SetPrefs(AslTireXPrefs prefs)
     }
   }
 }
-        
+
 void AslTireX::Process(CanFrame frame)
 {
   if (frame.identifier > 0xFFFF)

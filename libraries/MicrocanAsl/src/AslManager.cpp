@@ -6,7 +6,7 @@ bool AslManager::Connect(int txPin, int rxPin)
     if (ESP32Can.begin(ESP32Can.convertSpeed(1000), txPin, rxPin))
     {
         m_connected = true;
-        return true; 
+        return true;
     }
     else
     {
