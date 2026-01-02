@@ -6,12 +6,17 @@
 
 TireGraph::TireGraph(int zones, byte data[4][16])
 {
+    int z = 4;
+    if(zones == 1 || zones == 2 || zones == 4 || zones == 8 || zones == 16)
+    {
+        z = zones;
+    }
     m_canvas = new M5Canvas(&M5.Lcd);
-    m_watched = new WatchedValue(20, 60);
-    m_patches[0] = new TirePatchGraph(zones, data[0], false);
-    m_patches[1] = new TirePatchGraph(zones, data[1], true);
-    m_patches[2] = new TirePatchGraph(zones, data[2], false);
-    m_patches[3] = new TirePatchGraph(zones, data[3], true);
+    m_watched = new WatchedValue("Tire", "2 x C", 20, 60);
+    m_patches[0] = new TirePatchGraph(z, data[0], false);
+    m_patches[1] = new TirePatchGraph(z, data[1], true);
+    m_patches[2] = new TirePatchGraph(z, data[2], false);
+    m_patches[3] = new TirePatchGraph(z, data[3], true);
     SetSize(0, 0, 400, 400);
     SetPrefs(20, 80);
 }
@@ -47,7 +52,7 @@ void TireGraph::SetSize(int x, int y, int w, int h)
 void TireGraph::SetPrefs(int minT, int maxT)
 {
     delete m_watched;
-    m_watched = new WatchedValue(minT * 2, maxT * 2);
+    m_watched = new WatchedValue("Tire", "2 x C", minT * 2, maxT * 2);
     m_patches[0]->SetPrefs(minT, maxT);
     m_patches[1]->SetPrefs(minT, maxT);
     m_patches[2]->SetPrefs(minT, maxT);
@@ -108,7 +113,12 @@ void TireGraph::DrawStatic()
     m_canvas->drawFloat(m_watched->High / 2.0, 0, v4 - 8, (h5 + h6) / 2 + 2);
 
     m_canvas->setTextDatum(textdatum_t::middle_center);
-    m_canvas->drawFloat((m_watched->High + m_watched->Low) / 4.0, 0, (v4 + v1) / 2, (h5 + h6) / 2 + 2);
+    for (int i = 0; i < 3; i++)
+    {
+        float value = (m_watched->Low + m_watched->Range() / 4.0 * (i+1)) / 2.0;
+        int x = v1 + (v4 - v1) * (i+1) / 4.0;
+        m_canvas->drawFloat(value, 0, x, (h5 + h6) / 2 + 2);
+    }
 
     m_canvas->pushSprite(m_x, m_y);
     m_canvas->deleteSprite();

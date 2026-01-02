@@ -7,10 +7,14 @@ TirePatchGraph::TirePatchGraph(int zones, byte *data, bool flip)
   m_y = 0;
   m_w = 100;
   m_h = 100;
-  m_zones = zones;
+  m_zones = 4;
+  if (zones == 1 || zones == 2 || zones == 4 || zones == 8 || zones == 16)
+  {
+    m_zones = zones;
+  }
   m_data = data;
   m_flip = flip;
-  m_watched = new WatchedValue(30, 70);
+  m_watched = new WatchedValue("Tire", "2 x C", 30, 70);
 };
 
 void TirePatchGraph::SetSize(int x, int y, int w, int h)
@@ -24,7 +28,7 @@ void TirePatchGraph::SetSize(int x, int y, int w, int h)
 void TirePatchGraph::SetPrefs(int minT, int maxT)
 {
   delete m_watched;
-  m_watched = new WatchedValue(minT * 2, maxT * 2);
+  m_watched = new WatchedValue("Tire", "2 x C", minT * 2, maxT * 2);
 }
 
 void TirePatchGraph::Update()

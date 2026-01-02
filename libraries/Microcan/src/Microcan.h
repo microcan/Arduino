@@ -1,6 +1,8 @@
 #ifndef MICROCAN_COMMON_H
 #define MICROCAN_COMMON_H
 
+#include <WString.h>
+
 // limit int value to be in the range from low to high
 int limit(int value, int low, int high);
 
@@ -38,13 +40,19 @@ public:
   // graphs and color are topped out.  Must be > HighNormal
   float High;
 
+  // The short display name for the value, like "Oil" or "RPM"
+  String Name;
+
+  // The short, ASCII, display units for the value, like "deg C" or "PSI"
+  String Units;
+
   // Just provide a low and high and let the code set up some reasonable normal and alarm ranges
-  WatchedValue(float low, float high);
+  WatchedValue(String name, String units, float low, float high);
 
   // Constructor where you provide all the details.  high > highNormal > lowNormal > low.
   // Alarm levels can be anything but would be weird for them to not be lowNormal > lowAlarm > low and 
   // high > highAlarm > highNormal
-  WatchedValue(float low, float lowAlarm, float lowNormal, float highNormal, float highAlarm, float high);
+  WatchedValue(String name, String units, float low, float lowAlarm, float lowNormal, float highNormal, float highAlarm, float high);
 
   // Returns High - Low.
   float Range();

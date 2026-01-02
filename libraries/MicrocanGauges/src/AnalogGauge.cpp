@@ -18,14 +18,18 @@
 #define TICK_LBL_RAD 0.75
 #define NAME_Y 0.5
 #define UNIT_Y 0.35
+#define MAX_VAL_LNG 0.55
+#define MAX_VAL_SIZ 0.05
 
-AnalogGauge::AnalogGauge(String label, String units, WatchedValue &watched)
+AnalogGauge::AnalogGauge(WatchedValue &watched)
 {
   m_canvas = new M5Canvas(&M5.Lcd);
   m_watched = &watched;
-  m_units = units;
-  m_label = label;
+  m_units = m_watched->Units;
+  m_label = m_watched->Name;
   m_oldValue = 0;
+  m_oldMaxVal = 0;
+  m_maxVal = 0;
   m_maxChange = 0.05;
   m_dialColor = TFT_BLACK;
   m_txtColor = M5.Display.color565(120, 120, 120);
@@ -164,6 +168,17 @@ void AnalogGauge::DrawNeedle(float normPos, float length, float baseThick, float
   m_canvas->fillTriangle(x0, y0, x4, y4, x1, y1, color);
 }
 
+void AnalogGauge::DrawMaxVal(float normPos, float length, float size, uint16_t color)
+{
+  float angle = LEFT - SWEEP * normPos;
+  float sx = sin(angle * DEG2RAD);
+  float cx = cos(angle * DEG2RAD);
+  float x0 = m_cx + length * cx * m_r;
+  float y0 = m_cy - length * sx * m_r;
+  m_canvas->fillCircle(x0, y0, size, color);
+}
+
+
 void AnalogGauge::DrawDynamic()
 {
   m_canvas->createSprite(m_w, m_h);
@@ -172,6 +187,9 @@ void AnalogGauge::DrawDynamic()
 
   // clear old needle display
   DrawNeedle(m_oldValue, NDL_LNTH + 0.01, NDL_BASE + 0.05, NDL_TIP + 2, m_dialColor);
+
+  // clear old max val
+  DrawMaxVal(m_oldMaxVal, MAX_VAL_LNG, MAX_VAL_SIZ * m_r + 2, m_dialColor);
 
   // major tick mark labels
   for (int i = 0; i <= LRG_TICK_COUNT; i++)
@@ -209,6 +227,19 @@ void AnalogGauge::DrawDynamic()
   }
 
   byte r, g, b;
+
+  // draw max val
+  if (value > m_maxVal)
+  {
+    m_oldMaxVal = m_maxVal;
+    m_maxVal = value;
+  }
+
+  float maxScaled = m_maxVal * m_watched->Range() + m_watched->Low;
+  m_watched->ColorForValue(maxScaled, r, g, b);
+  DrawMaxVal(m_maxVal, MAX_VAL_LNG, MAX_VAL_SIZ * m_r, M5.Display.color565(r, g, b));
+
+
   m_watched->Color(r, g, b);
   DrawNeedle(value, NDL_LNTH, NDL_BASE, NDL_TIP, M5.Display.color565(r, g, b));
 
