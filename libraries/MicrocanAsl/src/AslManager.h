@@ -1,0 +1,28 @@
+#ifndef ASL_MANAGER_H
+#define ASL_MANAGER_H
+
+#include <ESP32-TWAI-CAN.hpp>
+#include "AslShiftX3.h"
+#include "AslTireX.h"
+
+// wrapper to manage the CAN connection toboth TireX and ShiftX3
+class AslManager
+{
+private:
+    bool m_connected = false;
+
+public:
+    // access ShiftX3 features as a property
+    AslShiftX3 ShiftX;
+
+    // access TireX features as a property
+    AslTireX TireX;
+
+    // connect to the CAN where the ASL modules are to be found.  Call this in your setup.
+    bool Connect(int txPin, int rxPin);
+
+    // read and process any CAN messages from ASL modules.  Call this in your loop
+    void Update();
+};
+
+#endif
