@@ -88,5 +88,5 @@ void WatchedValue::ColorForValue(float value, unsigned char &r, unsigned char &g
 
 void WatchedValue::Color(unsigned char &r, unsigned char &g, unsigned char &b)
 {
-    ColorForValue(Value, r, b, g);
+    ColorForValue(Value, r, g, b);
 }

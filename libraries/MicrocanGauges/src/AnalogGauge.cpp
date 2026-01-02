@@ -10,7 +10,7 @@
 #define SML_TICK_OUTER 1.00
 #define LRG_TICK_COUNT 4
 #define LRG_TICK_INNER 0.92
-#define LRG_TICK_OUTER 1.00
+#define LRG_TICK_OUTER 0.99
 #define LRG_TICK_THICK 1.5
 #define NDL_LNTH 0.89
 #define NDL_BASE 0.2
@@ -27,7 +27,8 @@ AnalogGauge::AnalogGauge(String label, String units, WatchedValue &watched)
   m_label = label;
   m_oldValue = 0;
   m_maxChange = 0.05;
-  m_dialColor = TFT_WHITE;
+  m_dialColor = TFT_BLACK;
+  m_txtColor = M5.Display.color565(120, 120, 120);
   SetSize(0, 0, M5.Lcd.width(), M5.Lcd.height());
 }
 
@@ -87,8 +88,8 @@ void AnalogGauge::DrawStatic()
   m_canvas->createSprite(m_w, m_h);
 
   m_canvas->fillSprite(TFT_BLACK);
-  m_canvas->fillCircle(m_cx, m_cy, m_r, M5.Display.color565(120, 120, 120));
-  m_canvas->fillCircle(m_cx, m_cy, m_r - 4, m_dialColor);
+  m_canvas->fillCircle(m_cx, m_cy, m_r, m_txtColor);
+  m_canvas->fillCircle(m_cx, m_cy, m_r - 6, m_dialColor);
 
   // minor tick marks
   for (int i = 0; i <= SML_TICK_COUNT; i++)
@@ -102,7 +103,7 @@ void AnalogGauge::DrawStatic()
     x1 = cosA * m_r * SML_TICK_INNER + m_cx;
     y1 = -sinA * m_r * SML_TICK_INNER + m_cy;
 
-    m_canvas->drawLine(x0, y0, x1, y1, TFT_BLACK);
+    m_canvas->drawLine(x0, y0, x1, y1, m_txtColor);
   }
 
   // major tick marks as rectangles
@@ -123,11 +124,11 @@ void AnalogGauge::DrawStatic()
     x3 = cosA * m_r * LRG_TICK_INNER + m_cx;
     y3 = -sinA * m_r * LRG_TICK_INNER + m_cy;
 
-    m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, M5.Display.color565(80, 80, 80));
-    m_canvas->fillTriangle(x3, y3, x0, y0, x2, y2, M5.Display.color565(80, 80, 80));
+    m_canvas->fillTriangle(x0, y0, x1, y1, x2, y2, m_txtColor);
+    m_canvas->fillTriangle(x3, y3, x0, y0, x2, y2, m_txtColor);
   }
 
-  m_canvas->setTextColor(TFT_BLACK, m_dialColor);
+  m_canvas->setTextColor(m_txtColor);
   SetFontSize(m_bigFont);
   m_canvas->setTextDatum(textdatum_t::top_center);
   m_canvas->drawString(m_label, m_cx, m_cy + m_r * NAME_Y);
@@ -167,6 +168,7 @@ void AnalogGauge::DrawDynamic()
 {
   m_canvas->createSprite(m_w, m_h);
   m_canvas->fillSprite(TFT_TRANSPARENT);
+  m_canvas->setTextColor(m_txtColor);
 
   // clear old needle display
   DrawNeedle(m_oldValue, NDL_LNTH + 0.01, NDL_BASE + 0.05, NDL_TIP + 2, m_dialColor);
@@ -182,14 +184,12 @@ void AnalogGauge::DrawDynamic()
     float x0 = cx * m_r * TICK_LBL_RAD + m_cx;
     float y0 = -sx * m_r * TICK_LBL_RAD + m_cy;
     float mark = m_watched->High - m_watched->Range() / LRG_TICK_COUNT * i;
-    m_canvas->setTextColor(TFT_BLACK, m_dialColor);
     SetFontSize(m_smallFont);
     m_canvas->setTextDatum(textdatum_t::middle_center);
     m_canvas->drawNumber(mark, x0, y0);
   }
 
   // units text
-  m_canvas->setTextColor(TFT_BLACK, m_dialColor);
   SetFontSize(m_medFont);
   m_canvas->setTextDatum(textdatum_t::middle_center);
   m_canvas->drawString(m_units, m_cx, m_cy - m_r * UNIT_Y);
@@ -210,10 +210,10 @@ void AnalogGauge::DrawDynamic()
 
   byte r, g, b;
   m_watched->Color(r, g, b);
-  DrawNeedle(value, NDL_LNTH, NDL_BASE, NDL_TIP, M5.Display.color565(r, b, g));
+  DrawNeedle(value, NDL_LNTH, NDL_BASE, NDL_TIP, M5.Display.color565(r, g, b));
 
   // middle button
-  m_canvas->fillCircle(m_cx, m_cy, NDL_BASE * m_r + 2, TFT_BLACK);
+  m_canvas->fillCircle(m_cx, m_cy, NDL_BASE * m_r + 2, m_txtColor);
 
   m_oldValue = value;
 

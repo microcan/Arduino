@@ -26,6 +26,7 @@ private:
     float m_oldValue;
     float m_maxChange;
     uint16_t m_dialColor;
+    uint16_t m_txtColor;
     bool m_first = true;
 
 public:
