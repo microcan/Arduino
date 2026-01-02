@@ -192,6 +192,9 @@ void AnalogGauge::DrawDynamic()
   DrawMaxVal(m_oldMaxVal, MAX_VAL_LNG, MAX_VAL_SIZ * m_r + 2, m_dialColor);
 
   // major tick mark labels
+  int dec = 0;
+  if (m_watched->High < 1.05) dec = 2;
+  else if (m_watched->High < 10.5) dec = 1;
   for (int i = 0; i <= LRG_TICK_COUNT; i++)
   {
     float angle = RIGHT + SWEEP / LRG_TICK_COUNT * i;
@@ -204,7 +207,7 @@ void AnalogGauge::DrawDynamic()
     float mark = m_watched->High - m_watched->Range() / LRG_TICK_COUNT * i;
     SetFontSize(m_smallFont);
     m_canvas->setTextDatum(textdatum_t::middle_center);
-    m_canvas->drawNumber(mark, x0, y0);
+    m_canvas->drawFloat(mark, dec, x0, y0);
   }
 
   // units text

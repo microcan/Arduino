@@ -4,22 +4,21 @@
 
 // data to drive the tire patch temps
 // Following ASL TireX data, byte temps are 2 * deg C
-byte temps[16];
+byte temps[4][16];
 
-// create a tire patch graph
-TirePatchGraph graph(16, temps, false);
+// create a tire graph that will show four patches
+TireGraph graph(16, temps);
 
 void setup() 
 {
-  int w, h;
+  int size;
 
   // setup the hardware
   M5.begin();
-  w = min((int)M5.Lcd.width(), 300);
-  h = min((int)M5.Lcd.height(), 300);
+  size = min((int)M5.Lcd.width(), (int)M5.Lcd.height());
   
-  // size and position the gauge
-  graph.SetSize(10, 10, w, h);
+  // size and position the graph
+  graph.SetSize(10, 10, size - 20, size - 20);
 
   // set temp range for colors from 20 deg c to 100 deg c
   graph.SetPrefs(20, 100);
@@ -38,12 +37,15 @@ void loop()
 
     // update the temp values with a ~random ramp
     // raw byte temps are 2 x deg C
-    for (int i = 0; i < 16; i++)
+    for (int j = 0; j < 4; j++)
     {
-      temps[i] = random(128) + 8 * i;
+      for (int i = 0; i < 16; i++)
+      {
+        temps[j][i] = random(32) + 14 * i;
+      }
     }
     
-    // update the gauge
+    // update the graph
     graph.Update();
   }
 }

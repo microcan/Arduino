@@ -18,7 +18,7 @@ void setup()
   w = min((int)M5.Lcd.width(), 300);
   h = min((int)M5.Lcd.height(), 300);
   
-  // size and position the gauge
+  // size and position the patch
   graph.SetSize(10, 10, w, h);
 
   // set temp range for colors from 20 deg c to 100 deg c
@@ -40,10 +40,10 @@ void loop()
     // raw byte temps are 2 x deg C
     for (int i = 0; i < 16; i++)
     {
-      temps[i] = random(128) + 8 * i;
+      temps[i] = random(32) + 14 * i;
     }
     
-    // update the gauge
+    // update the patch
     graph.Update();
   }
 }

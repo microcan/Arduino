@@ -14,9 +14,9 @@ AslManager ASL;
 
 bool displayOnTop = true;
 
-WatchedValue tire(50, 60);
-WatchedValue alert0(0, 10);
-WatchedValue alert1(0, 20);
+WatchedValue tire("Tire", "", 50, 60);
+WatchedValue alert0("A0", "", 0, 10);
+WatchedValue alert1("A1", "", 0, 20);
 
 void OnButton(int button, bool down)
 {

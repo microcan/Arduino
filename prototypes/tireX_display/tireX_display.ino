@@ -5,7 +5,7 @@
 AslManager asl;
 TireGraph* patch;
 AnalogGauge* gauges[4];
-WatchedValue watch(0, 10);
+WatchedValue watch("Test", "Test", 0, 10);
 
 void setup() 
 {
@@ -19,10 +19,10 @@ void setup()
   patch->SetSize(0, 0, w, h * 0.4);
   patch->SetPrefs(20, 40);
 
-  gauges[0] = new AnalogGauge("First", "deg C", watch);
-  gauges[1] = new AnalogGauge("Second", "deg C", watch);
-  gauges[2] = new AnalogGauge("Third", "deg C", watch);
-  gauges[3] = new AnalogGauge("Fourth", "deg C", watch);
+  gauges[0] = new AnalogGauge(watch);
+  gauges[1] = new AnalogGauge(watch);
+  gauges[2] = new AnalogGauge(watch);
+  gauges[3] = new AnalogGauge(watch);
 
   int gw = w/2 - 20;
   int gh = h*0.3 - 20;
