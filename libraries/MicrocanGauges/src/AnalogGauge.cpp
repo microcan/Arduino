@@ -30,7 +30,7 @@ AnalogGauge::AnalogGauge(WatchedValue &watched)
   m_oldValue = 0;
   m_oldMaxVal = 0;
   m_maxVal = 0;
-  m_maxChange = 0.05;
+  m_maxChange = 0.08;
   m_dialColor = TFT_BLACK;
   m_txtColor = M5.Display.color565(120, 120, 120);
   SetSize(0, 0, M5.Lcd.width(), M5.Lcd.height());

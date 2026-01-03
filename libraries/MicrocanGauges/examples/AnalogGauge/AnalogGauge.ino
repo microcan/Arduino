@@ -1,6 +1,5 @@
 #include <M5Unified.h>
 #include <MicrocanGauges.h>
-#include <Microcan.h>
 
 // used watched values to drive gauges
 WatchedValue oilP("Oil", "Bar", 0, 10);

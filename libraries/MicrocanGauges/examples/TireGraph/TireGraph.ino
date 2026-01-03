@@ -1,6 +1,5 @@
 #include <M5Unified.h>
 #include <MicrocanGauges.h>
-#include <Microcan.h>
 
 // data to drive the tire patch temps
 // Following ASL TireX data, byte temps are 2 * deg C

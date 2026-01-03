@@ -1,7 +1,6 @@
 #ifndef ANALOG_GAUGE_H
 #define ANALOG_GAUGE_H
 
-#include <M5GFX.h>
 #include <M5Unified.h>
 #include <Microcan.h>
 

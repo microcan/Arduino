@@ -79,8 +79,9 @@ void TireGraph::DrawStatic()
 {
     m_canvas->createSprite(m_w, m_h);
 
-    m_canvas->fillSprite(M5.Display.color565(120, 120, 120));
-    m_canvas->fillRect(6, 6, m_w - 12, m_h - 12, TFT_BLACK);
+    //m_canvas->fillSprite(M5.Display.color565(120, 120, 120));
+    //m_canvas->fillRect(6, 6, m_w - 12, m_h - 12, TFT_BLACK);
+    m_canvas->fillSprite(TFT_BLACK);
 
     int v1 = MARGIN;
     int v2 = m_w / 2 - MARGIN;

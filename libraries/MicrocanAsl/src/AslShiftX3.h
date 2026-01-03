@@ -26,6 +26,11 @@ private:
     void (*m_buttonCallback)(int, bool) = nullptr;
     void (*m_connectCallback)() = nullptr;
 
+    WatchedValue *m_alert[2] = {nullptr, nullptr};
+    float m_alertMult[2] = { 1.0, 1.0};
+    WatchedValue *m_linear = nullptr;
+    bool m_linearReverse = false;
+
     AslShiftX3HardwareConfig m_config;
     bool m_detailsUpdated = false;
     bool m_connected = false;
@@ -94,12 +99,16 @@ public:
     // Automatically set Alert thresholds using the ranges specified in a WatchedValue class
     // index: 0-1: the alert light to set up.
     // watched: the class with the limits to use for alert thresholds.
-    bool SetAlertThresholds(int index, WatchedValue watched);
+    void SetAlertWatch(int index, WatchedValue &watched);
+
+    void SetAlertWatchHigh(int index, WatchedValue &watched);
 
     // Custom method to set the bar graph as a shift indicator, directly setting the LEDs
     // watch: the WatchedValue class with the current value and thresholds to make everything work.
     // reverse: you need to control this, use true for left to right with displayOnTop set in SetConfiguration.
-    bool SetCustomLinearGraph(WatchedValue watch, bool reverse);
+    void SetLinearGraphWatch(WatchedValue &watch, bool reverse);
+
+    void Update();
 };
 
 #endif

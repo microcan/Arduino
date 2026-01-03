@@ -1,12 +1,11 @@
-#ifndef ASL_MANAGER_H
-#define ASL_MANAGER_H
+#ifndef CAN_MANAGER_H
+#define CAN_MANAGER_H
 
-#include <ESP32-TWAI-CAN.hpp>
 #include "AslShiftX3.h"
 #include "AslTireX.h"
 
 // wrapper to manage the CAN connection toboth TireX and ShiftX3
-class AslManager
+class CanManager
 {
 private:
     bool m_connected = false;

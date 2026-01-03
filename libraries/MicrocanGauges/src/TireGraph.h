@@ -1,6 +1,7 @@
 #ifndef TIRE_GRAPH_H
 #define TIRE_GRAPH_H
 
+#include <M5Unified.h>
 #include "TirePatchGraph.h"
 
 // sizeable control that display four tire patches and a temperature legend

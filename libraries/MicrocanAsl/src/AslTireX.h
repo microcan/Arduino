@@ -12,23 +12,14 @@ enum AlsTireXPosition
   RR
 };
 
-// Preferences you can send to hardware
-struct AslTireXPrefs
-{
-  // valid rates are 0 (0.5Hz), 1, 2, 4, 8, 16, 32, 64Hz
-  int SampleRate = 8;
-  // valid zones are 1, 2, 4, 8, 16
-  // 16 zones is not supported in this code yet.
-  int Zones = 8;
-};
-
 // Class that handles the tire temp messages, and lets you set preferences
 class AslTireX
 {
 private:
-  AslTireXPrefs m_prefs;
   bool m_connected[4] = {false, false, false, false};
-  bool SendPrefs(int pos, AslTireXPrefs prefs);
+  int m_zones = 8;
+  int m_freq = 4;
+  bool SendPrefs(int pos);
 
 public:
   // temps by position, only valid up to the number of zones that are
@@ -36,7 +27,9 @@ public:
   byte Temps[4][16];
 
   // set prefs at any time, ideally before CAN is connected, they will be sent to sensors on connection
-  void SetPrefs(AslTireXPrefs prefs);
+  // valid zones are 1, 2, 4, 8, 16 - 16 zones is not supported in this code yet.
+  // valid rates are 0 (0.5Hz), 1, 2, 4, 8, 16, 32, 64Hz
+  void SetPrefs(int zones, int sampleRate);
 
   // Called by the manager, process a notification message from the modules
   void Process(CanFrame frame);

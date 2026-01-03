@@ -1,6 +1,5 @@
 #include <M5Unified.h>
 #include <MicrocanGauges.h>
-#include <Microcan.h>
 
 // show an array of gauges
 AnalogGauge* gauges[4];
