@@ -12,6 +12,9 @@ enum AlsTireXPosition
   RR
 };
 
+// convienience strings for tire positions
+String AlsTireLabel(int pos);
+
 // Class that handles the tire temp messages, and lets you set preferences
 class AslTireX
 {

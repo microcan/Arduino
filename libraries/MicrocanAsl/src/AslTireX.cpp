@@ -1,6 +1,15 @@
 #include "AslCommon.h"
 #include "AslTireX.h"
 
+String AlsTireLabel(int pos)
+{
+  if (pos == 0) return "FL";
+  if (pos == 1) return "FR";
+  if (pos == 2) return "RL";
+  if (pos == 3) return "RR";
+  return "NA";
+}
+
 // convert a sensor ID into a tire position
 bool id2Pos(unsigned int id, int &pos)
 {

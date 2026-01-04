@@ -9,7 +9,7 @@
 #define CAN_TX 6
 #define CAN_RX 7
 
-// CanManager coordinates CAN messages between ShiftX and TireX
+// CanManager coordinates CAN messages to and from ShiftX and TireX
 CanManager ASL;
 
 // do you want the ShiftX 7 segment display on the top?
@@ -60,7 +60,7 @@ void OnShiftXConnect() {
 }
 
 void setup() {
-  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
+  Serial.begin(9600); 
   Serial.println("Start of setup.");
 
 
@@ -82,8 +82,9 @@ void loop() {
   // process all the CAN traffic and update ShiftX
   ASL.Update();
 
+  // update the 7 segment display, and update thewatched values at 2Hz
   unsigned long now = millis();
-  if (now - last > 400) {
+  if (now - last > 500) {
     last = now;
     slowCount++;
 
@@ -91,6 +92,8 @@ void loop() {
     //update shiftx displays
     ASL.ShiftX.SetDisplay(slowCount % 10);
 
+    // Update the watched .Values, the updates to alert and linear graph hardware will be sent on the
+    // next ASL.Update()
     alert0.Value = slowCount % 100;
     alert1.Value = slowCount % 100;
     rpm.Value = (slowCount % 100) * 80;
