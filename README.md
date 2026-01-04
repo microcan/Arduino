@@ -15,6 +15,7 @@ Some common functionality for the following libraries
 Classes to configure, set and read data from:
 1. The https://wiki.autosportlabs.com/ShiftX3 hardware
 2. The https://wiki.autosportlabs.com/TireX hardware
+
 This library should only depend on ESP32-TWAI-CAN so you should be able to run it on any ESP hardware.  Some of the examples also use the MicrocanGauges library to display the data on M5Stack hardware.
 
 ### libraries/MicrocanGauges
