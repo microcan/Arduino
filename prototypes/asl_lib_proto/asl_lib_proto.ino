@@ -18,7 +18,7 @@ bool displayOnTop = true;
 
 // use some watched values to drive the alerts and the shift lights
 
-// RPM is could go from 0 to whatever, but set some specific thresholds 
+// RPM is could go from 0 to whatever, but set some specific thresholds
 // for when we want the shift lights to come on (Low), start flashing
 // (HighAlarm) and top outat full bar, full red (High).  The other
 // thresholds control the color ramping
@@ -31,23 +31,18 @@ WatchedValue alert0("A0", "", 0, 100);
 WatchedValue alert1("A1", "", 0, 100);
 
 // callback for ShiftX button events
-void OnShiftXButton(int button, bool down)
-{
-  if (down)
-  {
+void OnShiftXButton(int button, bool down) {
+  if (down) {
     M5.Lcd.printf("Button %d DOWN\n", button);
     ASL.ShiftX.SetDisplay(button);
-  }
-  else
-  {
+  } else {
     M5.Lcd.printf("Button %d UP\n", button);
   }
 }
 
 // callback for when ShiftX is actually found on the CAN bus.
 // put all your config here.
-void OnShiftXConnect()
-{
+void OnShiftXConnect() {
   M5.Lcd.printf("---OnConnect started.\n");
   AslShiftX3HardwareConfig config = ASL.ShiftX.GetConfig();
   M5.Lcd.printf("LEDs: %d, Alerts: %d, Length: %d\n", config.LedCount, config.AlertCount, config.BarGraphLength);
@@ -59,14 +54,15 @@ void OnShiftXConnect()
   M5.Lcd.printf("setting alert 0\n");
   ASL.ShiftX.SetAlertWatch(0, alert0);
   M5.Lcd.printf("setting alert 1\n");
-  ASL.ShiftX.SetAlertWatchHigh(1, alert1); 
+  ASL.ShiftX.SetAlertWatchHigh(1, alert1);
   M5.Lcd.printf("setting linear graph\n");
   ASL.ShiftX.SetLinearGraphWatch(rpm, displayOnTop);
-  M5.Lcd.printf("---Finished OnConnect.\n");    
+  M5.Lcd.printf("---Finished OnConnect.\n");
 }
 
-void setup() 
-{
+void setup() {
+  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
+  Serial.println("Arduino is ready. Send a character to respond.");
   M5.begin();
   M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
   M5.Lcd.setTextSize(2);
@@ -76,12 +72,9 @@ void setup()
   ASL.ShiftX.RegisterButtonCallback(OnShiftXButton);
   ASL.ShiftX.RegisterConnectCallback(OnShiftXConnect);
 
-  if (ASL.Connect(CAN_TX, CAN_RX))
-  {
+  if (ASL.Connect(CAN_TX, CAN_RX)) {
     M5.Lcd.printf("CAN manager connected.\n");
-  }
-  else
-  {
+  } else {
     M5.Lcd.printf("Error connecting CAN wrapper\n");
   }
 }
@@ -89,14 +82,13 @@ void setup()
 unsigned long last = 0;
 int slowCount = 0;
 
-void loop() 
-{
+void loop() {
   // process all the CAN traffic and update ShiftX
   ASL.Update();
-  
+
   unsigned long now = millis();
-  if (now - last > 400)
-  {
+  if (now - last > 400) {
+    Serial.println("Arduino is ready. Send a character to respond.");
     last = now;
     slowCount++;
 
@@ -107,6 +99,6 @@ void loop()
     alert0.Value = slowCount % 100;
     alert1.Value = slowCount % 100;
     rpm.Value = (slowCount % 100) * 80;
-    M5.Lcd.printf("Set values: RPM: %04d, Alert 0: %02d, Alert 1: %02d\n", rpm.Value, alert0.Value, alert1.Value);
+    M5.Lcd.printf("Set values: RPM: %04d, Alert 0: %02f, Alert 1: %02f\n", rpm.Value, alert0.Value, alert1.Value);
   }
 }
