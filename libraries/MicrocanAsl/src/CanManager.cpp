@@ -20,7 +20,8 @@ bool CanManager::Connect(int txPin, int rxPin)
 void CanManager::Update()
 {
     CanFrame rxFrame;
-    while (ESP32Can.readFrame(rxFrame, 50))
+
+    while (ESP32Can.readFrame(rxFrame, 0))
     {
         if (rxFrame.identifier >= ASL_SHIFTX3_BASE_ID && rxFrame.identifier <= ASL_SHIFTX3_MAX_ID)
         {

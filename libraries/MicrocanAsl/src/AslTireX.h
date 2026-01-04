@@ -23,7 +23,8 @@ private:
 
 public:
   // temps by position, only valid up to the number of zones that are
-  // set in the prefs.
+  // set in the prefs.  Read this array to getthe current temps in
+  // the TireX raw bytes, which are (2 * deg C)
   byte Temps[4][16];
 
   // set prefs at any time, ideally before CAN is connected, they will be sent to sensors on connection

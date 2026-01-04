@@ -63,7 +63,7 @@ bool AslShiftX3::GetConnected()
     return m_connected;
 }
 
-bool AslShiftX3::GetDetailsupdated()
+bool AslShiftX3::GetDetailsUpdated()
 {
     return m_detailsUpdated;
 }
@@ -190,10 +190,6 @@ bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, by
 
 bool AslShiftX3::SetAlertValue(int index, unsigned int value)
 {
-    if (!m_connected)
-    {
-        return false;
-    }
     index = limit(index, 0, m_config.AlertCount - 1);
 
     CanFrame txFrame = {0};
@@ -212,7 +208,7 @@ void AslShiftX3::SetAlertWatch(int index, WatchedValue &watched)
     index = limit(index, 0, 1);
 
     m_alert[index] = &watched;
-    // put floats into a good int range
+    // put floats into a good int range between the actual float watched.Value and the uint that goes to HW
     if (m_alert[index]->Range() <= 1)
     {
         m_alertMult[index] = 1000;
@@ -328,18 +324,20 @@ void AslShiftX3::Update()
         }
 
         // set the lights
-        bool result = true;
+        // Some light s are full on
         if (full > 0)
         {
-            result = SetLed(solidStart, full, r, g, b, flashHz);
+            SetLed(solidStart, full, r, g, b, flashHz);
         }
-        if (result && (full < m_config.BarGraphLength))
+        // The next light is fractionally on
+        if (full < m_config.BarGraphLength)
         {
-            result = SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
+            SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
         }
-        if (result && (full < (m_config.BarGraphLength - 1)))
+        // the rest are off.
+        if (full < (m_config.BarGraphLength - 1))
         {
-            result = SetLed(blankStart, m_config.BarGraphLength - full - 1, 0, 0, 0, 0);
+            SetLed(blankStart, m_config.BarGraphLength - full - 1, 0, 0, 0, 0);
         }
     }
 }

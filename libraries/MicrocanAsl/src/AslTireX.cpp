@@ -35,10 +35,11 @@ void AslTireX::SetPrefs(int zones, int sampleRate)
 
 void AslTireX::Process(CanFrame frame)
 {
-  if (frame.identifier > 0xFFFF)
+  if (frame.identifier < ASL_TIREX_BASE_ID || frame.identifier > ASL_TIREX_MAX_ID)
   {
     return;
   }
+  
   unsigned int id = frame.identifier;
   int pos;
   if (!id2Pos(id, pos))
