@@ -63,7 +63,7 @@ bool AslShiftX3::GetConnected()
     return m_connected;
 }
 
-bool AslShiftX3::GetDetailsupdated()
+bool AslShiftX3::GetDetailsUpdated()
 {
     return m_detailsUpdated;
 }
@@ -167,6 +167,11 @@ bool AslShiftX3::SetAlertThreshold(int index, int id, unsigned int threshold, by
     id = limit(id, 0, 4);
     flashHz = limit(flashHz, 0, 10);
 
+    if (threshold < id)
+    {
+        threshold = id;
+    }
+
     CanFrame txFrame = {0};
     txFrame.identifier = ASL_SHIFTX3_SET_ALRT_THRSH;
     txFrame.extd = 1;
@@ -198,77 +203,141 @@ bool AslShiftX3::SetAlertValue(int index, unsigned int value)
     return ESP32Can.writeFrame(txFrame);
 }
 
-bool AslShiftX3::SetAlertThresholds(int index, WatchedValue watched)
+void AslShiftX3::SetAlertWatch(int index, WatchedValue &watched)
 {
+    index = limit(index, 0, 1);
+
+    m_alert[index] = &watched;
+    // put floats into a good int range between the actual float watched.Value and the uint that goes to HW
+    if (m_alert[index]->Range() <= 1)
+    {
+        m_alertMult[index] = 1000;
+    }
+    else if (m_alert[index]->Range() < 10)
+    {
+        m_alertMult[index] = 100;
+    }
+    else if (m_alert[index]->Range() < 100)
+    {
+        m_alertMult[index] = 10;
+    }
+
     byte r, g, b;
 
     watched.ColorForValue(watched.Low, r, g, b);
-    SetAlertThreshold(index, 0, watched.Low, r, g, b, 10);
+    SetAlertThreshold(index, 0, watched.Low * m_alertMult[index], r, g, b, 10);
 
     watched.ColorForValue(watched.LowAlarm, r, g, b);
-    SetAlertThreshold(index, 1, watched.LowAlarm, r, g, b, 0);
+    SetAlertThreshold(index, 1, watched.LowAlarm * m_alertMult[index], r, g, b, 0);
 
     watched.ColorForValue(watched.LowNormal, r, g, b);
-    SetAlertThreshold(index, 2, watched.LowNormal, r, g, b, 0);
+    SetAlertThreshold(index, 2, watched.LowNormal * m_alertMult[index], r, g, b, 0);
 
     watched.ColorForValue(watched.HighNormal, r, g, b);
-    SetAlertThreshold(index, 3, watched.HighNormal, r, g, b, 0);
+    SetAlertThreshold(index, 3, watched.HighNormal * m_alertMult[index], r, g, b, 0);
 
-    watched.ColorForValue(watched.HighAlarm, r, g, b);
-    SetAlertThreshold(index, 4, watched.HighAlarm, r, g, b, 10);
+    watched.ColorForValue(watched.High, r, g, b);
+    SetAlertThreshold(index, 4, watched.HighAlarm * m_alertMult[index], r, g, b, 10);
 }
 
-bool AslShiftX3::SetCustomLinearGraph(WatchedValue watch, bool reverse)
+void AslShiftX3::SetAlertWatchHigh(int index, WatchedValue &watched)
 {
+    index = limit(index, 0, 1);
+
+    m_alert[index] = &watched;
+    // put floats into a good int range
+    if (m_alert[index]->Range() <= 1)
+    {
+        m_alertMult[index] = 1000;
+    }
+    else if (m_alert[index]->Range() < 10)
+    {
+        m_alertMult[index] = 100;
+    }
+    else if (m_alert[index]->Range() < 100)
+    {
+        m_alertMult[index] = 10;
+    }
+
     byte r, g, b;
 
-    watch.Color(r, g, b);
+    watched.ColorForValue(watched.HighNormal, r, g, b);
+    SetAlertThreshold(index, 0, watched.HighNormal * m_alertMult[index], r, g, b, 0);
 
-    // should we flash?
-    int flashHz;
-    if (watch.HighAlarmActive())
-    {
-        flashHz = 10;
-    }
-    else
-    {
-        flashHz = 0;
-    }
+    watched.ColorForValue(watched.High, r, g, b);
+    SetAlertThreshold(index, 1, watched.HighAlarm * m_alertMult[index], r, g, b, 10);
+}
 
-    // figure outhow many lights should be full on,
-    // what fraction the next one should be on, and
-    // how many should be off
-    float norm = watch.Normalized();
-    int full = floor(norm * m_config.BarGraphLength);
-    float frac = norm * m_config.BarGraphLength - full;
+void AslShiftX3::SetLinearGraphWatch(WatchedValue &watch, bool reverse)
+{
+    m_linear = &watch;
+    m_linearReverse = reverse;
+}
 
-    int solidStart, partialStart, blankStart;
-    if (reverse)
+void AslShiftX3::Update()
+{
+    for (int i = 0; i < 2; i++)
     {
-        solidStart = m_config.BarGraphLength - full;
-        partialStart = solidStart - 1;
-        blankStart = 0;
-    }
-    else
-    {
-        solidStart = 0;
-        partialStart = full;
-        blankStart = full + 1;
+        if (m_alert[i] != nullptr)
+        {
+            SetAlertValue(i, m_alert[i]->Value * m_alertMult[i]);
+        }
     }
 
-    // set the lights
-    bool result = true;
-    if (full > 0)
+    if (m_linear != nullptr)
     {
-        result = SetLed(solidStart, full, r, g, b, flashHz);
+        byte r, g, b;
+
+        m_linear->Color(r, g, b);
+
+        // should we flash?
+        int flashHz;
+
+        if (m_linear->HighAlarmActive())
+        {
+            flashHz = 10;
+        }
+        else
+        {
+            flashHz = 0;
+        }
+
+        // figure outhow many lights should be full on,
+        // what fraction the next one should be on, and
+        // how many should be off
+        float norm = m_linear->Normalized();
+        int full = floor(norm * m_config.BarGraphLength);
+        float frac = norm * m_config.BarGraphLength - full;
+
+        int solidStart, partialStart, blankStart;
+        if (m_linearReverse)
+        {
+            solidStart = m_config.BarGraphLength - full;
+            partialStart = solidStart - 1;
+            blankStart = 0;
+        }
+        else
+        {
+            solidStart = 0;
+            partialStart = full;
+            blankStart = full + 1;
+        }
+
+        // set the lights
+        // Some light s are full on
+        if (full > 0)
+        {
+            SetLed(solidStart, full, r, g, b, flashHz);
+        }
+        // The next light is fractionally on
+        if (full < m_config.BarGraphLength)
+        {
+            SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
+        }
+        // the rest are off.
+        if (full < (m_config.BarGraphLength - 1))
+        {
+            SetLed(blankStart, m_config.BarGraphLength - full - 1, 0, 0, 0, 0);
+        }
     }
-    if (result && (full < m_config.BarGraphLength))
-    {
-        result = SetLed(partialStart, 1, r * frac, g * frac, b * frac, flashHz);
-    }
-    if (result && (full < (m_config.BarGraphLength - 1)))
-    {
-        result = SetLed(blankStart, m_config.BarGraphLength - full - 1, 0, 0, 0, 0);
-    }
-    return result;
 }

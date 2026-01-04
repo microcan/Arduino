@@ -20,24 +20,26 @@ unsigned int pos2Id(int pos)
   return result;
 }
 
-void AslTireX::SetPrefs(AslTireXPrefs prefs)
+void AslTireX::SetPrefs(int zones, int sampleRate)
 {
-  m_prefs = prefs;
+  m_zones = zones;
+  m_freq = sampleRate;
   for (int i = 0; i < 4; i++)
   {
     if (m_connected[i])
     {
-      SendPrefs(i, prefs);
+      SendPrefs(i);
     }
   }
 }
 
 void AslTireX::Process(CanFrame frame)
 {
-  if (frame.identifier > 0xFFFF)
+  if (frame.identifier < ASL_TIREX_BASE_ID || frame.identifier > ASL_TIREX_MAX_ID)
   {
     return;
   }
+  
   unsigned int id = frame.identifier;
   int pos;
   if (!id2Pos(id, pos))
@@ -48,7 +50,7 @@ void AslTireX::Process(CanFrame frame)
   if (!m_connected[pos])
   {
     m_connected[pos] = true;
-    SendPrefs(pos, m_prefs);
+    SendPrefs(pos);
   }
 
   int offset = lowByte(id);
@@ -58,7 +60,7 @@ void AslTireX::Process(CanFrame frame)
   }
 }
 
-bool AslTireX::SendPrefs(int pos, AslTireXPrefs prefs)
+bool AslTireX::SendPrefs(int pos)
 {
   unsigned int sensorId = pos2Id(pos);
 
@@ -66,8 +68,8 @@ bool AslTireX::SendPrefs(int pos, AslTireXPrefs prefs)
   txFrame.identifier = sensorId + ASL_TIREX_SET_CONFIG_OFF;
   txFrame.extd = 1;
   txFrame.data_length_code = 4;
-  txFrame.data[0] = prefs.SampleRate;
-  txFrame.data[1] = prefs.Zones;
+  txFrame.data[0] = m_freq;
+  txFrame.data[1] = m_zones;
   txFrame.data[2] = pos;
   txFrame.data[3] = 0;
 

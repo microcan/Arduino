@@ -11,8 +11,10 @@ float limit(float value, float low, float high)
     return std::min(std::max(value, low), high);
 }
 
-WatchedValue::WatchedValue(float low, float high)
+WatchedValue::WatchedValue(String name, String units, float low, float high)
 {
+    Name = name;
+    Units = units;
     Low = low;
     High = high;
     float range = Range();
@@ -23,8 +25,10 @@ WatchedValue::WatchedValue(float low, float high)
     Value = Low;
 }
 
-WatchedValue::WatchedValue(float low, float lowAlarm, float lowNormal, float highNormal, float highAlarm, float high)
+WatchedValue::WatchedValue(String name, String units, float low, float lowAlarm, float lowNormal, float highNormal, float highAlarm, float high)
 {
+    Name = name;
+    Units = units;
     Low = low;
     LowAlarm = lowAlarm;
     LowNormal = lowNormal;

@@ -1,11 +1,13 @@
-#include "AslManager.h"
+#include "CanManager.h"
+#include <ESP32-TWAI-CAN.hpp>
 #include "AslCommon.h"
 
-bool AslManager::Connect(int txPin, int rxPin)
+bool CanManager::Connect(int txPin, int rxPin)
 {
     if (ESP32Can.begin(ESP32Can.convertSpeed(1000), txPin, rxPin))
     {
         m_connected = true;
+
         return true;
     }
     else
@@ -15,10 +17,11 @@ bool AslManager::Connect(int txPin, int rxPin)
     }
 }
 
-void AslManager::Update()
+void CanManager::Update()
 {
     CanFrame rxFrame;
-    while (ESP32Can.readFrame(rxFrame, 50))
+
+    while (ESP32Can.readFrame(rxFrame, 0))
     {
         if (rxFrame.identifier >= ASL_SHIFTX3_BASE_ID && rxFrame.identifier <= ASL_SHIFTX3_MAX_ID)
         {
@@ -29,4 +32,6 @@ void AslManager::Update()
             TireX.Process(rxFrame);
         }
     }
+
+    ShiftX.Update();
 }

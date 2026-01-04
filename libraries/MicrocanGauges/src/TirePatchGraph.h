@@ -1,7 +1,6 @@
 #ifndef TIRE_PATCH_GRAPH_H
 #define TIRE_PATCH_GRAPH_H
 
-#include <M5GFX.h>
 #include <M5Unified.h>
 #include <Microcan.h>
 
