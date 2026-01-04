@@ -9,7 +9,7 @@ int limit(int value, int low, int high);
 // limit float value to be in the range from low to high
 float limit(float value, float low, float high);
 
-// all then information needed for displays to decide whether
+// all the information needed for displays to decide whether
 // a watched value is alarmingly low or high.  
 class WatchedValue
 {
