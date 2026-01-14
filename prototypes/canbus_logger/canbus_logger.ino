@@ -18,10 +18,11 @@
 #define SD_SPI_MISO_PIN 38
 #define SD_SPI_MOSI_PIN 23
 
-int g_lastStamp = 0;
+unsigned long lastStamp = 0;
 bool fileGood = false;
 bool logging = false;
 fs::File canFile;
+bool didSomething = false;
 
 void setup() 
 {
@@ -73,22 +74,26 @@ void loop()
   M5.update();
 
   CanFrame rxFrame;
-  int currentStamp = millis();
+  unsigned long currentStamp = millis();
 
-  if (currentStamp - g_lastStamp > 30000) 
+  if (currentStamp - lastStamp > 30000) 
   {
-    g_lastStamp = currentStamp;
-    M5.Lcd.printf("%04d: still alive.\r\n", currentStamp / 1000);
+    lastStamp = currentStamp;
+    if (!didSomething)
+    {
+      M5.Lcd.printf("%04d: still alive.\r\n", currentStamp / 1000);
+    }
+    didSomething = false;
   }
 
-  if (M5.BtnA.wasClicked())
+  if (M5.BtnA.wasClicked() && !logging)
   {
     M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
     logging = true;
     M5.Lcd.printf("Logging activated\n");
   }
 
-  if (M5.BtnC.wasClicked())
+  if (M5.BtnC.wasClicked() && logging)
   {
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
     logging = false;
@@ -97,7 +102,8 @@ void loop()
 
   while (ESP32Can.readFrame(rxFrame, 0))
   {
-    M5.Lcd.printf("ID %X DL %03d D %03d %03d %03d %03d %03d %03d %03d %03d\n", rxFrame.identifier, rxFrame.data_length_code,
+    didSomething = true;
+    M5.Lcd.printf("%X DL %03d D %03d %03d %03d %03d %03d %03d %03d %03d\n", rxFrame.identifier, rxFrame.data_length_code,
          rxFrame.data[0], rxFrame.data[1], rxFrame.data[2], rxFrame.data[3], rxFrame.data[4], rxFrame.data[5], rxFrame.data[6], rxFrame.data[7]);
 
     if (fileGood && logging)
