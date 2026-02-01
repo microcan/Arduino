@@ -35,6 +35,8 @@ public:
     // maxT: red end
     void SetPrefs(int minT, int maxT);
 
+    void ScaleToRange();
+
     // call this in your loop
     void Update();
 

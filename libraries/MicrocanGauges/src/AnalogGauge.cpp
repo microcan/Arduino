@@ -16,7 +16,8 @@
 #define NDL_BASE 0.2
 #define NDL_TIP 1.0
 #define TICK_LBL_RAD 0.75
-#define NAME_Y 0.5
+#define NAME_Y 0.6
+#define VALUE_Y 0.3
 #define UNIT_Y 0.35
 #define MAX_VAL_LNG 0.55
 #define MAX_VAL_SIZ 0.05
@@ -242,12 +243,18 @@ void AnalogGauge::DrawDynamic()
   m_watched->ColorForValue(maxScaled, r, g, b);
   DrawMaxVal(m_maxVal, MAX_VAL_LNG, MAX_VAL_SIZ * m_r, M5.Display.color565(r, g, b));
 
-
   m_watched->Color(r, g, b);
   DrawNeedle(value, NDL_LNTH, NDL_BASE, NDL_TIP, M5.Display.color565(r, g, b));
 
   // middle button
   m_canvas->fillCircle(m_cx, m_cy, NDL_BASE * m_r + 2, m_txtColor);
+
+  // Value text
+  m_canvas->setTextColor(m_txtColor);
+  SetFontSize(m_bigFont);
+  m_canvas->setTextDatum(textdatum_t::top_right);
+  m_canvas->fillRect(m_cx - m_r * 0.35, m_cy + m_r * VALUE_Y, m_r * 0.7, m_r * 0.28, TFT_BLACK);
+  m_canvas->drawFloat(m_watched->Value, dec, m_cx + m_r * 0.3, m_cy + m_r * VALUE_Y);
 
   m_oldValue = value;
 

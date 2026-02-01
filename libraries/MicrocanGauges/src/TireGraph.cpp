@@ -12,14 +12,14 @@ TireGraph::TireGraph(int zones, byte data[4][16])
         m_zones = zones;
     }
     m_canvas = new M5Canvas(&M5.Lcd);
-    m_min = new WatchedValue("Tire", "2 x C", 20, 60);
-    m_max = new WatchedValue("Tire", "2 x C", 20, 60);
+    m_min = new WatchedValue("Tire", "2 x C", 0, 127);
+    m_max = new WatchedValue("Tire", "2 x C", 0, 127);
     m_patches[0] = new TirePatchGraph(m_zones, data[0], false);
     m_patches[1] = new TirePatchGraph(m_zones, data[1], true);
     m_patches[2] = new TirePatchGraph(m_zones, data[2], false);
     m_patches[3] = new TirePatchGraph(m_zones, data[3], true);
     SetSize(0, 0, 400, 400);
-    SetPrefs(20, 80);
+    SetPrefs(0, 127);
 }
 
 void TireGraph::LayoutPatches()
@@ -50,6 +50,13 @@ void TireGraph::SetSize(int x, int y, int w, int h)
     m_first = true;
 }
 
+void TireGraph::ScaleToRange()
+{
+    int newMin = m_min->Value / 2 - 5;
+    int newMax = m_max->Value / 2 + 5;
+    SetPrefs(newMin, newMax);
+}
+
 void TireGraph::SetPrefs(int minT, int maxT)
 {
     delete m_min;
@@ -58,6 +65,7 @@ void TireGraph::SetPrefs(int minT, int maxT)
     m_min->Value= m_min->High;
     m_max = new WatchedValue("TireMax", "2 x C", minT * 2, maxT * 2);
     m_max->Value = m_max->Low;
+    m_first = true;
     m_patches[0]->SetPrefs(minT, maxT);
     m_patches[1]->SetPrefs(minT, maxT);
     m_patches[2]->SetPrefs(minT, maxT);
@@ -83,7 +91,7 @@ void TireGraph::Update()
         {
             if (m_data[j][i] > m_max->Value)
                 m_max->Value = m_data[j][i];
-            if (m_data[j][i] < m_min->Value)
+            if (m_data[j][i] > 0 && m_data[j][i] < m_min->Value)
                 m_min->Value = m_data[j][i];
         }
     }
@@ -155,23 +163,23 @@ void TireGraph::DrawDynamic()
         int r = 8;
         int y = m_h * PATCH_FRAC + MARGIN - r - 2;
 
-        if (m_oldMax != m_max->Normalized())
-        {
+        //if (m_oldMax != m_max->Normalized())
+        //{
             int x = MARGIN + fullW * m_oldMax;
             m_canvas->fillCircle(x, y, r, TFT_BLACK);
             x = MARGIN + fullW * m_max->Normalized();
             m_canvas->fillCircle(x, y, r, TFT_RED);
             m_oldMax = m_max->Normalized();
-        }
+        //}
 
-        if (m_oldMin != m_min->Normalized())
-        {
-            int x = MARGIN + fullW * m_oldMin;
+        //if (m_oldMin != m_min->Normalized())
+        //{
+            x = MARGIN + fullW * m_oldMin;
             m_canvas->fillCircle(x, y, r, TFT_BLACK);
             x = MARGIN + fullW * m_min->Normalized();
             m_canvas->fillCircle(x, y, r, TFT_BLUE);
             m_oldMin = m_min->Normalized();
-        }
+        //}
 
         m_canvas->pushSprite(m_x, m_y, TFT_TRANSPARENT);
         m_canvas->deleteSprite();
