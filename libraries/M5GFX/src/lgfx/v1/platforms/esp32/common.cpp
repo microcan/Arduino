@@ -64,6 +64,7 @@ Contributors:
   #include <soc/apb_ctrl_reg.h>
  #endif
 #endif
+
 #include <soc/efuse_reg.h>
 
 #include <esp_log.h>
@@ -156,20 +157,27 @@ Contributors:
 #endif
 
 
+
+#if defined (CONFIG_IDF_TARGET_ESP32C6) || defined (CONFIG_IDF_TARGET_ESP32P4) || ( defined (CONFIG_IDF_TARGET_ESP32C3) && ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0) )
+ #define LGFX_GPIO_IN_SEL_CFG_REG
+#endif
+
+
+
 namespace lgfx
 {
  inline namespace v1
  {
 //----------------------------------------------------------------------------
-  static __attribute__ ((always_inline)) inline volatile uint32_t* reg(uint32_t addr) { return (volatile uint32_t *)ETS_UNCACHED_ADDR(addr); }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
   static __attribute__ ((always_inline)) inline void writereg(uint32_t addr, uint32_t value) { *(volatile uint32_t*)addr = value; }
+  static __attribute__ ((always_inline)) inline volatile uint32_t* reg(uint32_t addr) { return (volatile uint32_t *)ETS_UNCACHED_ADDR(addr); }
 #pragma GCC diagnostic pop
 
   static int search_pin_number(int peripheral_sig)
   {
-#if defined (CONFIG_IDF_TARGET_ESP32C6) || defined (CONFIG_IDF_TARGET_ESP32P4)
+#if defined LGFX_GPIO_IN_SEL_CFG_REG
     uint32_t result = GPIO.func_in_sel_cfg[peripheral_sig].in_sel;
 #else
     uint32_t result = GPIO.func_in_sel_cfg[peripheral_sig].func_sel;
@@ -382,7 +390,7 @@ namespace lgfx
     *gpio_en_reg = 1u << (pin & 31);
 
 
-#if defined (CONFIG_IDF_TARGET_ESP32C6) || defined (CONFIG_IDF_TARGET_ESP32P4)
+#if defined LGFX_GPIO_IN_SEL_CFG_REG
     GPIO.func_out_sel_cfg[pin].out_sel = SIG_GPIO_OUT_IDX;
 #else
     GPIO.func_out_sel_cfg[pin].func_sel = SIG_GPIO_OUT_IDX;
@@ -689,13 +697,13 @@ namespace lgfx
 
 #pragma GCC diagnostic pop
 
-      *reg(SPI_USER_REG(spi_port)) = SPI_USR_MOSI | SPI_USR_MISO | SPI_DOUTDIN;  // need SD card access (full duplex setting)
-      *reg(SPI_CTRL_REG(spi_port)) = 0;
+      writereg(SPI_USER_REG(spi_port), SPI_USR_MOSI | SPI_USR_MISO | SPI_DOUTDIN);  // need SD card access (full duplex setting)
+      writereg(SPI_CTRL_REG(spi_port), 0);
       #if defined ( SPI_CTRL1_REG )
-      *reg(SPI_CTRL1_REG(spi_port)) = 0;
+      writereg(SPI_CTRL1_REG(spi_port), 0);
       #endif
       #if defined ( SPI_CTRL2_REG )
-      *reg(SPI_CTRL2_REG(spi_port)) = 0;
+      writereg(SPI_CTRL2_REG(spi_port), 0);
       #endif
 
       return {};
@@ -741,7 +749,7 @@ namespace lgfx
           ESP_LOGW("LGFX", "Failed to spi_device_acquire_bus. ");
         }
 #if defined ( SOC_GDMA_SUPPORTED )
-        *reg(SPI_DMA_CONF_REG((spi_host + 1))) = 0; /// Clear previous transfer
+        writereg(SPI_DMA_CONF_REG((spi_host + 1)), 0); /// Clear previous transfer
 #endif
       }
 #endif
