@@ -12,7 +12,12 @@ private:
     M5Canvas *m_canvas;
     TirePatchGraph *m_patches[4];
     bool m_first = true;
-    WatchedValue* m_watched;
+    WatchedValue* m_min;
+    WatchedValue* m_max;
+    float m_oldMin = 0.5;
+    float m_oldMax = 0.5;
+    int m_zones = 4;
+    byte (*m_data)[16];
 
 public:
     // Construct with the number of zones and pointer to the data
@@ -29,6 +34,8 @@ public:
     // minT: blue end
     // maxT: red end
     void SetPrefs(int minT, int maxT);
+
+    void ScaleToRange();
 
     // call this in your loop
     void Update();

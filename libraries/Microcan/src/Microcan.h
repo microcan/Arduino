@@ -14,7 +14,7 @@ float limit(float value, float low, float high);
 class WatchedValue
 {
 public:
-  // The current value of thewatched item.
+  // The current value of the watched item.
   float Value;
 
   // The low end of the watch.  The value might go lower, 
