@@ -10,7 +10,7 @@
 // SUBARU CAN - CAN1 (TWAI) Pins
 #define CAN1_RX_PIN GPIO_NUM_6
 #define CAN1_TX_PIN GPIO_NUM_7
-twai_timing_config_t CAN1_SPEED = TWAI_TIMING_CONFIG_1MBITS();   // CAN1 at 250 kbps
+twai_timing_config_t CAN1_SPEED = TWAI_TIMING_CONFIG_500KBITS(); 
 
 
 // SENSOR CAN - CAN2 (MCP2515) Custom SPI Pins
@@ -53,6 +53,23 @@ bool SendDataCan2(unsigned long can_id, byte ext_flag, byte *data, unsigned long
   }
 }
 
+bool PassFilter(uint32_t id)
+{
+  uint32_t white[] = { 
+    24,   // steering
+    209,  // Brake Pedal
+    212,  // Wheelspeed
+    320,  // RPM, Clutch and Accel pedals, gear indicator?
+    864,  // Oil and Coolant Temp
+    2024  // ODB RPM
+    };
+  int length = std::size(white);
+
+  for (int i = 0; i < length; i++) 
+  {
+    if (id == white[i]) return true;
+  }
+}
 void RcvDataCan1()
 {
   twai_message_t message;
@@ -72,7 +89,8 @@ void RcvDataCan1()
     // Here you can modify the data before it is sent to CAN2
 
     // Send modified message to CAN2
-    if (SendDataCan2(message.identifier, message.extd, message.data, message.data_length_code)) {
+    if (PassFilter(message.identifier) && SendDataCan2(message.identifier, message.extd, message.data, message.data_length_code)) 
+    {
         digitalWrite(LED_BUILTIN, led_state);
         led_state = led_state ? LOW : HIGH;
     }

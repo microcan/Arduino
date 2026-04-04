@@ -35,7 +35,7 @@ WatchedValue shift("Shift", "", 4000, 4500, 5000, 6000, 6800, 7200);
 WatchedValue over("Refresh", "ms", 0, 300);
 
 // scaleable display for four gauges, set up by which watched values you give it
-Panel2x2 panel(oilP, oilT, waterT, rpm);
+Panel2x2 panel(oilP, oilT, waterT, over);
 
 // callback for ShiftX button events
 void OnShiftXButton(int button, bool down) {
@@ -56,7 +56,7 @@ void OnShiftXConnect() {
   ASL.ShiftX.SetConfiguration(0, 61, displayOnTop);
 
   ASL.ShiftX.SetAlertWatch(0, oilT);
-  ASL.ShiftX.SetAlertWatchHigh(1, waterT);
+  ASL.ShiftX.SetAlertWatch(1, waterT);
   ASL.ShiftX.SetLinearGraphWatch(shift, displayOnTop);
 }
 
@@ -100,24 +100,24 @@ void loop() {
     slowCount++;
 
     //update shiftx 7-segment display
-    ASL.ShiftX.SetDisplay(slowCount % 10);
+    ASL.ShiftX.SetDisplay(ASL.Subaru.gear);
 
     // simulate changing values from sensors by updating values for the watched items
     // in a real implementation here is where you would update the values with the actual
     // sensor readings
     oilP.Value = oilP.Value + 0.005 * oilP.Range();
     if (oilP.Value > (oilP.High / 2)) oilP.Value = oilP.Low;
-    oilT.Value = oilT.Value + 0.0062 * oilT.Range();
-    if (oilT.Value > oilT.High) oilT.Value = oilT.Low;
-    waterT.Value = waterT.Value + 0.003654 * waterT.Range();
-    if (waterT.Value > (waterT.High)) waterT.Value = waterT.Low;
-    rpm.Value = rpm.Value + 0.01 * rpm.Range();
-    if (rpm.Value > 7200) rpm.Value = rpm.Low;
-    shift.Value = rpm.Value;
+
+    // values from CANBUS
+    oilT.Value = ASL.Subaru.oilTemp;
+    waterT.Value = ASL.Subaru.waterTemp;
+    rpm.Value = ASL.Subaru.rpm;
+    shift.Value = ASL.Subaru.rpm;
 
     // update the tire patch display
     patch.Update();
     // update the gauges in the gauge panel
     panel.Update();
   }
+  sleep(1);
 }

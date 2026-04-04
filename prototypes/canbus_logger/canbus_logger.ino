@@ -34,7 +34,11 @@ void setup()
 
   if (ESP32Can.begin(ESP32Can.convertSpeed(1000), CAN_TX, CAN_RX))
   {
-    M5.Lcd.printf("CAN Bus started, success.\n");
+    M5.Lcd.printf("CAN Bus started at 1Mbps, success.\n");
+  }
+  else if (ESP32Can.begin(ESP32Can.convertSpeed(500), CAN_TX, CAN_RX))
+  {
+    M5.Lcd.printf("CAN Bus started at 500kbps, success.\n");
   }
   else
   {
