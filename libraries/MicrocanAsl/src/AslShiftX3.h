@@ -33,7 +33,7 @@ private:
 
     AslShiftX3HardwareConfig m_config;
     bool m_detailsUpdated = false;
-    bool m_connected = false;
+    int m_connectCount = 0;
 
 public:
     // Becomes true when any notification is received from the module

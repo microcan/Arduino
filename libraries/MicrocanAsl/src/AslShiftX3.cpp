@@ -17,9 +17,9 @@ void AslShiftX3::Process(CanFrame in)
             m_config.FirmwarePatch = in.data[5];
         }
 
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -29,9 +29,9 @@ void AslShiftX3::Process(CanFrame in)
     // button state change
     else if (in.identifier == ASL_SHIFTX3_INF_BUTTON)
     {
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -47,9 +47,9 @@ void AslShiftX3::Process(CanFrame in)
     // firmware version info
     else if (in.identifier == ASL_SHIFTX3_INF_STATS)
     {
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -60,7 +60,7 @@ void AslShiftX3::Process(CanFrame in)
 
 bool AslShiftX3::GetConnected()
 {
-    return m_connected;
+    return m_connectCount >= 5;
 }
 
 bool AslShiftX3::GetDetailsUpdated()
@@ -82,7 +82,7 @@ void AslShiftX3::RegisterConnectCallback(void (*callback)())
 {
     m_connectCallback = callback;
     // call the callback immediately if already connected
-    if (m_connected)
+    if (m_connectCount > 0)
     {
         m_connectCallback();
     }

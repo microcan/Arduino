@@ -150,6 +150,15 @@ bool Component::assign(TwoWire& wire)
     return false;
 }
 
+bool Component::assign(m5::I2C_Class& i2c)
+{
+    if (canAccessI2C() && _addr) {
+        _adapter = std::make_shared<AdapterI2C>(i2c, _addr, _component_cfg.clock);
+        return static_cast<bool>(_adapter);
+    }
+    return false;
+}
+
 bool Component::assign(const int8_t rx_pin, const int8_t tx_pin)
 {
     if (canAccessGPIO()) {
@@ -332,6 +341,11 @@ bool Component::readAnalogRX(uint16_t& v)
     return adapter()->readAnalogRX(v) == m5::hal::error::error_t::OK;
 }
 
+bool Component::readAnalogMilliVoltsRX(uint32_t& mv)
+{
+    return adapter()->readAnalogMilliVoltsRX(mv) == m5::hal::error::error_t::OK;
+}
+
 bool Component::pulseInRX(uint32_t& duration, const int state, const uint32_t timeout_us)
 {
     return adapter()->pulseInRX(duration, state, timeout_us) == m5::hal::error::error_t::OK;
@@ -360,6 +374,11 @@ bool Component::writeAnalogTX(const uint16_t v)
 bool Component::readAnalogTX(uint16_t& v)
 {
     return adapter()->readAnalogTX(v) == m5::hal::error::error_t::OK;
+}
+
+bool Component::readAnalogMilliVoltsTX(uint32_t& mv)
+{
+    return adapter()->readAnalogMilliVoltsTX(mv) == m5::hal::error::error_t::OK;
 }
 
 bool Component::pulseInTX(uint32_t& duration, const int state, const uint32_t timeout_us)

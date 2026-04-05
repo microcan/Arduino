@@ -1,6 +1,12 @@
 #include <MicrocanAsl.h>
 #include <MicrocanGauges.h>
 #include <M5Unified.h>
+#include <M5_ADS1115.h>
+
+// Voltmeter magic numbers
+#define M5_UNIT_VMETER_I2C_ADDR 0x49
+#define M5_UNIT_VMETER_EEPROM_I2C_ADDR 0x53
+#define M5_UNIT_VMETER_PRESSURE_COEFFICIENT 0.015918958F
 
 // These are good dip switches to set in PWRCAN for Core basic
 // Core Basic
@@ -14,6 +20,17 @@
 // CanManager coordinates CAN messages between ShiftX and TireX
 CanManager ASL;
 
+ADS1115 meter;
+
+float g_voltRes = 0.0;
+float g_voltCal = 0.0;
+
+//Oil pressure sender calibration
+float g_vMin = 0.47;
+float g_pMin = 0.0;
+float g_vMax = 5.0;
+float g_pMax = 10.0;
+
 // do you want the ShiftX 7 segment display on the top?
 bool displayOnTop = true;
 
@@ -26,8 +43,8 @@ TireGraph patch(zones, ASL.TireX.Temps);
 
 // Some watched values to drive gauges and ShiftX display
 WatchedValue oilP("Oil P", "Bar", 0, 10);
-WatchedValue oilT("Oil T", "deg C", -20, 120.0);
-WatchedValue waterT("Water", "deg C", -20, 120.0);
+WatchedValue oilT("Oil T", "deg C", 0, 150.0);
+WatchedValue waterT("Water", "deg C", 0, 150.0);
 // different watched values for RPM gauge vs shift lights as we want different
 // low ends on te gauge (0) vs shift lights (4000)
 WatchedValue rpm("RPM", "", 0, 500, 5000, 6000, 6800, 8000);
@@ -35,7 +52,7 @@ WatchedValue shift("Shift", "", 4000, 4500, 5000, 6000, 6800, 7200);
 WatchedValue over("Refresh", "ms", 0, 300);
 
 // scaleable display for four gauges, set up by which watched values you give it
-Panel2x2 panel(oilP, oilT, waterT, over);
+Panel2x2 panel(oilT, waterT, oilP, rpm);
 
 // callback for ShiftX button events
 void OnShiftXButton(int button, bool down) {
@@ -82,6 +99,19 @@ void setup() {
 
   // connect to CAN
   ASL.Connect(CAN_TX, CAN_RX);
+
+    if (!meter.begin(&Wire, M5_UNIT_VMETER_I2C_ADDR, 53, 54, 400000U)) {
+    delay(500);
+    meter.begin(&Wire, M5_UNIT_VMETER_I2C_ADDR, 53, 54, 400000U);
+  }
+
+  meter.setEEPROMAddr(M5_UNIT_VMETER_EEPROM_I2C_ADDR);
+  meter.setMode(ADS1115_MODE_SINGLESHOT);
+  meter.setRate(ADS1115_RATE_8);
+  meter.setGain(ADS1115_PGA_256);
+
+  g_voltRes = meter.getCoefficient() / M5_UNIT_VMETER_PRESSURE_COEFFICIENT;
+  g_voltCal = meter.getFactoryCalibration();
 }
 
 unsigned long last = 0;
@@ -102,11 +132,10 @@ void loop() {
     //update shiftx 7-segment display
     ASL.ShiftX.SetDisplay(ASL.Subaru.gear);
 
-    // simulate changing values from sensors by updating values for the watched items
-    // in a real implementation here is where you would update the values with the actual
-    // sensor readings
-    oilP.Value = oilP.Value + 0.005 * oilP.Range();
-    if (oilP.Value > (oilP.High / 2)) oilP.Value = oilP.Low;
+    int16_t adc_raw = meter.getSingleConversion();
+    float volt = adc_raw * g_voltRes * g_voltCal / 1000.0;
+    float raw = (volt - g_vMin) / (g_vMax - g_vMin) * (g_pMax - g_pMin) + g_pMin;
+    oilP.Value = 0.7 * oilP.Value + 0.3 * raw;
 
     // values from CANBUS
     oilT.Value = ASL.Subaru.oilTemp;
@@ -119,5 +148,4 @@ void loop() {
     // update the gauges in the gauge panel
     panel.Update();
   }
-  sleep(1);
 }
