@@ -6,12 +6,12 @@
 #include <driver/twai.h>
 #include <mcp_can.h>
 #include <SPI.h>
+#include "SubaruCan.h"
 
 // SUBARU CAN - CAN1 (TWAI) Pins
 #define CAN1_RX_PIN GPIO_NUM_6
 #define CAN1_TX_PIN GPIO_NUM_7
 twai_timing_config_t CAN1_SPEED = TWAI_TIMING_CONFIG_500KBITS();
-
 
 // SENSOR CAN - CAN2 (MCP2515) Custom SPI Pins
 #define CAN2_CS_PIN GPIO_NUM_10
@@ -48,44 +48,6 @@ bool SendDataCan2(unsigned long can_id, byte ext_flag, byte *data, unsigned long
   }
 }
 
-uint32_t white[] = {
-  24,   // steering
-  209,  // Brake Pedal
-  212,  // Wheelspeed
-  320,  // RPM, Clutch and Accel pedals, gear indicator?
-  864,  // Oil and Coolant Temp
-  2024  // ODB RPM
-};
-
-unsigned long last[] = {
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
-};
-
-bool PassFilter(uint32_t id) {
-  unsigned long now = millis();
-  for (int j = 0; j < 6; j++) {
-    //Serial.printf("Filter %d ", j);
-    if (id == white[j]) {
-      if ((now - last[j]) > 200) {
-        last[j] = now;
-        //Serial.println("passed");
-        return true;
-      }
-    }
-    //Serial.println("failed");
-  }
-  return false;
-}
-
 void RcvDataCan1() {
   twai_message_t message;
 
@@ -103,7 +65,7 @@ void RcvDataCan1() {
     // Here you can modify the data before it is sent to CAN2
 
     // Send modified message to CAN2
-    if (PassFilter(message.identifier)) {
+    if (SubaruPassFilter(message.identifier, 100)) {
       if (SendDataCan2(message.identifier, message.extd, message.data, message.data_length_code)) {
         digitalWrite(LED_BUILTIN, led_state);
         led_state = led_state ? LOW : HIGH;

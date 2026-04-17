@@ -3,21 +3,14 @@
 
 #include "AslShiftX3.h"
 #include "AslTireX.h"
-
-struct SubiValues
-{
-    float rpm;
-    float oilTemp;
-    float waterTemp;
-    int gear;
-};
+#include "SubaruCan.h"
 
 // wrapper to manage the CAN connection toboth TireX and ShiftX3
 class CanManager
 {
 private:
     bool m_connected = false;
-    void ProcessSubi(CanFrame frame);
+    
 public:
     // access ShiftX3 features as a property
     AslShiftX3 ShiftX;

@@ -101,6 +101,18 @@ bool AslShiftX3::SetDisplay(int value)
     return ESP32Can.writeFrame(txFrame);
 }
 
+bool AslShiftX3::SetDisplay(char value)
+{
+    CanFrame txFrame = {0};
+    txFrame.identifier = ASL_SHIFTX3_SET_DISPLAY;
+    txFrame.extd = 1;
+    txFrame.data_length_code = 2;
+    txFrame.data[0] = 0;
+    txFrame.data[1] = value;
+
+    return ESP32Can.writeFrame(txFrame);
+}
+
 bool AslShiftX3::SetConfiguration(int brightness, int autoBrightScaling, bool displayOnTop)
 {
     brightness = limit(brightness, 0, 100);
@@ -225,13 +237,13 @@ void AslShiftX3::SetAlertWatch(int index, WatchedValue &watched)
     byte r, g, b;
 
     watched.ColorForValue(watched.Low, r, g, b);
-    SetAlertThreshold(index, 0, watched.Low * m_alertMult[index], r, g, b, 10);
+    SetAlertThreshold(index, 0, 0, r, g, b, 10);
 
     watched.ColorForValue(watched.LowAlarm, r, g, b);
     SetAlertThreshold(index, 1, watched.LowAlarm * m_alertMult[index], r, g, b, 0);
 
     watched.ColorForValue(watched.LowNormal, r, g, b);
-    SetAlertThreshold(index, 2, watched.LowNormal * m_alertMult[index], r, g, b, 0);
+    SetAlertThreshold(index, 2, watched.LowNormal * m_alertMult[index], 0, 0, 0, 0);
 
     watched.ColorForValue(watched.HighNormal, r, g, b);
     SetAlertThreshold(index, 3, watched.HighNormal * m_alertMult[index], r, g, b, 0);

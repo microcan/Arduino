@@ -39,28 +39,29 @@ int zones = 8;
 int freq = 4;
 
 // scaleable display for tire patches
-TireGraph patch(zones, ASL.TireX.Temps);
+TireGraph2Panel patch(zones, ASL.TireX.Temps);
 
 // Some watched values to drive gauges and ShiftX display
 WatchedValue oilP("Oil P", "Bar", 0, 10);
-WatchedValue oilT("Oil T", "deg C", 0, 150.0);
-WatchedValue waterT("Water", "deg C", 0, 150.0);
+WatchedValue oilT("Oil T", "deg C", 30, 55, 65, 120, 130, 150.0);
+WatchedValue waterT("Water", "deg C", 30, 55, 65, 120, 130, 150.0);
 // different watched values for RPM gauge vs shift lights as we want different
 // low ends on te gauge (0) vs shift lights (4000)
-WatchedValue rpm("RPM", "", 0, 500, 5000, 6000, 6800, 8000);
-WatchedValue shift("Shift", "", 4000, 4500, 5000, 6000, 6800, 7200);
+WatchedValue rpm("RPM", "", 0, 500, 5133, 6266, 7000, 8000);
+WatchedValue shift("Shift", "", 4000, 4500, 5133, 6266, 7000, 7400);
 WatchedValue over("Refresh", "ms", 0, 300);
+WatchedValue speed("Speed", "kph", 0, 200);
 
 // scaleable display for four gauges, set up by which watched values you give it
 Panel2x2 panel(oilT, waterT, oilP, rpm);
 
 // callback for ShiftX button events
 void OnShiftXButton(int button, bool down) {
-  // zero the simulated water temp on button 0
+  // Scale the tire patches to current temp range
   if (button == 0 && down) {
     patch.ScaleToRange();
   }
-  // zero the simulated oil temp on button 1
+  // scale thetre patches to full range
   if (button == 1 && down) {
     patch.SetPrefs(0, 127);
   }
@@ -72,8 +73,8 @@ void OnShiftXConnect() {
   // default autobrightness settings plus mounting orientation
   ASL.ShiftX.SetConfiguration(0, 61, displayOnTop);
 
-  ASL.ShiftX.SetAlertWatch(0, oilT);
-  ASL.ShiftX.SetAlertWatch(1, waterT);
+  ASL.ShiftX.SetAlertWatch(1, oilT);
+  ASL.ShiftX.SetAlertWatch(0, waterT);
   ASL.ShiftX.SetLinearGraphWatch(shift, displayOnTop);
 }
 
@@ -130,7 +131,14 @@ void loop() {
     slowCount++;
 
     //update shiftx 7-segment display
-    ASL.ShiftX.SetDisplay(ASL.Subaru.gear);
+    if (ASL.Subaru.clutch)
+    {
+      ASL.ShiftX.SetDisplay('C');
+    }
+    else
+    {
+      ASL.ShiftX.SetDisplay(ASL.Subaru.gear);
+    }
 
     int16_t adc_raw = meter.getSingleConversion();
     float volt = adc_raw * g_voltRes * g_voltCal / 1000.0;
@@ -142,6 +150,7 @@ void loop() {
     waterT.Value = ASL.Subaru.waterTemp;
     rpm.Value = ASL.Subaru.rpm;
     shift.Value = ASL.Subaru.rpm;
+    speed.Value = ASL.Subaru.speed;
 
     // update the tire patch display
     patch.Update();

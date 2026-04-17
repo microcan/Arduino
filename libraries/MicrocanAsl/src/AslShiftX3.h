@@ -64,6 +64,8 @@ public:
     // value: 0-9, gets displayed in the 7 segment 'gear indicator'
     bool SetDisplay(int value);
 
+    bool SetDisplay(char calue);
+
     // Set the general configuration
     // brightness: 0 = auto, 1 = dim, 100 = brightest, 0 is default
     // autoBrightScaling: 0-255, default = 61
