@@ -2,6 +2,7 @@
 #define MICROCAN_GAUGES_H
 
 #include "AnalogGauge.h"
+#include "DigitalGauge.h"
 #include "TirePatchGraph.h"
 #include "TireGraph.h"
 #include "TireGraph2Panel.h"

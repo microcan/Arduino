@@ -112,5 +112,5 @@ void loop() {
     }
   }
 
-  sleeo(5);
+  sleep(5);
 }

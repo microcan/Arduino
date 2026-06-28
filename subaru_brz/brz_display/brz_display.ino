@@ -90,8 +90,9 @@ void setup() {
   // size the gauge display
   panel.SetSize(0, h - w, w, w);
 
-  // scale the tire temp display to a gradient for full range 0 deg C to 127 degC
-  patch.SetPrefs(0, 127);
+  // ideal operating range for a ventus rs4 is 80-95
+  // scale the tire temp display to a gradient for range 60 deg C to 105 degC
+  patch.SetPrefs(60, 105);
 
   // register callbacks and set prefs before connection
   ASL.ShiftX.RegisterButtonCallback(OnShiftXButton);
