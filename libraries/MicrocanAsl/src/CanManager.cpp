@@ -17,6 +17,8 @@ bool CanManager::Connect(int txPin, int rxPin)
     }
 }
 
+
+
 void CanManager::Update()
 {
     CanFrame rxFrame;
@@ -30,6 +32,10 @@ void CanManager::Update()
         else if (rxFrame.identifier >= ASL_TIREX_BASE_ID && rxFrame.identifier <= ASL_TIREX_MAX_ID)
         {
             TireX.Process(rxFrame);
+        }
+        else
+        {
+            SubaruProcessFrame(rxFrame, Subaru);
         }
     }
 

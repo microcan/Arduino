@@ -4,6 +4,7 @@
 #include "AnalogGauge.h"
 #include "TirePatchGraph.h"
 #include "TireGraph.h"
+#include "TireGraph2Panel.h"
 #include "Panel2x2.h"
 #include "Panel1x3.h"
 

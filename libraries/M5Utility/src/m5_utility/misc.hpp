@@ -63,7 +63,7 @@ inline uint16_t reverseBitOrder(const uint16_t u16)
 template <uint32_t N>
 struct uint_least_for_bits {
     static_assert(N >= 1, "N must be >= 1");
-#ifdef __SIZEOF_INT128__
+#if defined(__SIZEOF_INT128__)
     static_assert(N <= 128, "N must be <= 128");
     using type =                                //
         typename std::conditional<              //
@@ -74,13 +74,13 @@ struct uint_least_for_bits {
                     (N <= 32), uint32_t,        //
                     typename std::conditional<  //
                         (N <= 64), uint64_t,    //
-                        __uint128_t             //
+                        unsigned __int128       //
                         >::type                 //
                     >::type                     //
                 >::type                         //
             >::type;
 #else
-    static_assert(N <= 64, "N must be <= 64m");
+    static_assert(N <= 64, "N must be <= 64");
     using type =                            //
         typename std::conditional<          //
             (N <= 8), uint8_t,              //

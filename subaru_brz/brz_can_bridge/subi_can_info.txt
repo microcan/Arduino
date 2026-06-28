@@ -1,0 +1,11 @@
+Name,       ID,     Offset,     Length,     Add,    Min,    Max
+AccPed,     320,    0,          1,          0,      0,      100
+BrakePed,   209,    2,          1,          0,      0,      100
+OilTemp,    864,    2,          1,          -40,    -40,    300
+Coolant,    864,    3,          1,          -40,    -40,    300
+ClutchPed,  320,    8,          1,          0,      0,      1
+Steering,   24,     0,          2,          0,      -180,   180
+WSFL,       212,    0,          2,          0,      0,      200
+WSFR,       212,    2,          2,          0,      0,      200
+WSRL,       212,    4,          2,          0,      0,      200
+WSRR,       212,    6,          2,          0,      0,      200

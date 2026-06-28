@@ -17,9 +17,9 @@ void AslShiftX3::Process(CanFrame in)
             m_config.FirmwarePatch = in.data[5];
         }
 
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -29,9 +29,9 @@ void AslShiftX3::Process(CanFrame in)
     // button state change
     else if (in.identifier == ASL_SHIFTX3_INF_BUTTON)
     {
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -47,9 +47,9 @@ void AslShiftX3::Process(CanFrame in)
     // firmware version info
     else if (in.identifier == ASL_SHIFTX3_INF_STATS)
     {
-        if (!m_connected)
+        if (m_connectCount < 5)
         {
-            m_connected = true;
+            m_connectCount++;
             if (m_connectCallback != nullptr)
             {
                 m_connectCallback();
@@ -60,7 +60,7 @@ void AslShiftX3::Process(CanFrame in)
 
 bool AslShiftX3::GetConnected()
 {
-    return m_connected;
+    return m_connectCount >= 5;
 }
 
 bool AslShiftX3::GetDetailsUpdated()
@@ -82,7 +82,7 @@ void AslShiftX3::RegisterConnectCallback(void (*callback)())
 {
     m_connectCallback = callback;
     // call the callback immediately if already connected
-    if (m_connected)
+    if (m_connectCount > 0)
     {
         m_connectCallback();
     }
@@ -97,6 +97,18 @@ bool AslShiftX3::SetDisplay(int value)
     txFrame.data_length_code = 2;
     txFrame.data[0] = 0;
     txFrame.data[1] = value + 48;
+
+    return ESP32Can.writeFrame(txFrame);
+}
+
+bool AslShiftX3::SetDisplay(char value)
+{
+    CanFrame txFrame = {0};
+    txFrame.identifier = ASL_SHIFTX3_SET_DISPLAY;
+    txFrame.extd = 1;
+    txFrame.data_length_code = 2;
+    txFrame.data[0] = 0;
+    txFrame.data[1] = value;
 
     return ESP32Can.writeFrame(txFrame);
 }
@@ -225,13 +237,13 @@ void AslShiftX3::SetAlertWatch(int index, WatchedValue &watched)
     byte r, g, b;
 
     watched.ColorForValue(watched.Low, r, g, b);
-    SetAlertThreshold(index, 0, watched.Low * m_alertMult[index], r, g, b, 10);
+    SetAlertThreshold(index, 0, 0, r, g, b, 10);
 
     watched.ColorForValue(watched.LowAlarm, r, g, b);
     SetAlertThreshold(index, 1, watched.LowAlarm * m_alertMult[index], r, g, b, 0);
 
     watched.ColorForValue(watched.LowNormal, r, g, b);
-    SetAlertThreshold(index, 2, watched.LowNormal * m_alertMult[index], r, g, b, 0);
+    SetAlertThreshold(index, 2, watched.LowNormal * m_alertMult[index], 0, 0, 0, 0);
 
     watched.ColorForValue(watched.HighNormal, r, g, b);
     SetAlertThreshold(index, 3, watched.HighNormal * m_alertMult[index], r, g, b, 0);

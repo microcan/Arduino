@@ -3,20 +3,23 @@
 
 #include "AslShiftX3.h"
 #include "AslTireX.h"
-
+#include "SubaruCan.h"
 
 // wrapper to manage the CAN connection toboth TireX and ShiftX3
 class CanManager
 {
 private:
     bool m_connected = false;
-
+    
 public:
     // access ShiftX3 features as a property
     AslShiftX3 ShiftX;
 
     // access TireX features as a property
     AslTireX TireX;
+
+    // access updated subi properties
+    SubiValues Subaru;
 
     // connect to the CAN where the ASL modules are to be found.  Call this in your setup.
     bool Connect(int txPin, int rxPin);

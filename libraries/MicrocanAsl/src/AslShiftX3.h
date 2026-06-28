@@ -33,7 +33,7 @@ private:
 
     AslShiftX3HardwareConfig m_config;
     bool m_detailsUpdated = false;
-    bool m_connected = false;
+    int m_connectCount = 0;
 
 public:
     // Becomes true when any notification is received from the module
@@ -63,6 +63,8 @@ public:
     // Set the gear indicator LED to a number from 0 to 9
     // value: 0-9, gets displayed in the 7 segment 'gear indicator'
     bool SetDisplay(int value);
+
+    bool SetDisplay(char calue);
 
     // Set the general configuration
     // brightness: 0 = auto, 1 = dim, 100 = brightest, 0 is default
