@@ -28,8 +28,8 @@ DigitalGauge::DigitalGauge(WatchedValue &watched)
   m_watched = &watched;
   m_units = m_watched->Units;
   m_label = m_watched->Name;
-  m_oldValue = 0;
-  m_maxVal = 0;
+  m_oldValue = m_watched->Low - 0.02;
+  m_maxVal = m_watched->Low;
   m_maxChange = 0.01;
   m_dialColor = TFT_BLACK;
   m_txtColor = M5.Display.color565(255, 255, 255);
@@ -58,7 +58,7 @@ void DigitalGauge::SetSize(int x, int y, int w, int h)
   {
     m_bigFont = 72;
     m_medFont = 56;
-    m_smallFont = 18;
+    m_smallFont = 40;
   }
   else if (m_size > 50)
   {
@@ -94,6 +94,19 @@ void DigitalGauge::DrawStatic()
   m_canvas->fillSprite(TFT_BLACK);
   m_canvas->fillRect(m_cx - m_size + 2, m_cy - m_size + 2, 2 * m_size - 4, 2 * m_size - 4, m_txtColor);
 
+  // background color
+  m_canvas->fillRect(m_cx - m_size + 6, m_cy - m_size + 6, 2 * m_size - 12, 2 * m_size - 12, m_dialColor);
+
+  // name text
+  SetFontSize(m_medFont);
+  m_canvas->setTextDatum(textdatum_t::top_left);
+  m_canvas->drawString(m_label, m_cx - m_size + 12, m_cy - m_size + 12);
+
+  // units text
+  SetFontSize(m_smallFont);
+  m_canvas->setTextDatum(textdatum_t::bottom_left);
+  m_canvas->drawString(m_units, m_cx - m_size + 12, m_cy + m_size - 12);
+
   m_canvas->pushSprite(m_x, m_y);
   m_canvas->deleteSprite();
 }
@@ -117,9 +130,11 @@ void DigitalGauge::DrawDynamic()
   m_canvas->createSprite(m_w, m_h);
   m_canvas->fillSprite(TFT_TRANSPARENT);
 
+  bool maxChanged = false;
   if (m_watched->Value > m_maxVal)
   {
     m_maxVal = m_watched->Value;
+    maxChanged = true;
   }
 
   byte r, g, b;
@@ -131,26 +146,26 @@ void DigitalGauge::DrawDynamic()
   m_canvas->setTextColor(m_txtColor);
 
   // background color
-  m_canvas->fillRect(m_cx - m_size + 8, m_cy - m_size + 8, 2 * m_size - 16, 2 * m_size - 16, fillColor);
+  float width = (2 * m_size - 16) * value;
+  m_canvas->fillRect(m_cx - m_size + 8, m_cy - m_size * 0.5, 2 * m_size - 16, m_size, m_dialColor);
+  m_canvas->fillRect(m_cx - m_size + 8, m_cy - m_size * 0.5, width, m_size, fillColor);
 
   // Value text
   SetFontSize(m_bigFont);
+  m_canvas->setTextSize(1.5);
   m_canvas->setTextDatum(textdatum_t::middle_center);
   m_canvas->drawFloat(m_watched->Value, dec, m_cx, m_cy);
 
-  // name text
-  SetFontSize(m_medFont);
-  m_canvas->setTextDatum(textdatum_t::top_left);
-  m_canvas->drawString(m_label, m_cx - m_size + 12, m_cy - m_size + 12);
-
-  // units text
-  m_canvas->setTextDatum(textdatum_t::top_right);
-  m_canvas->drawString(m_units, m_cx + m_size - 12, m_cy - m_size + 12);
-
   // max value
-  m_canvas->setTextDatum(textdatum_t::bottom_right);
-  m_canvas->drawFloat(m_maxVal, dec, m_cx + m_size - 12, m_cy + m_size - 12);
-
+  if (maxChanged)
+  {
+    SetFontSize(m_smallFont);
+    m_canvas->setTextSize(1.0);
+    m_canvas->fillRect(m_cx, m_cy + m_size * 0.5 + 18, m_size - 8, m_size * 0.5 - 26, m_dialColor);
+    m_canvas->fillRect(m_cx, m_cy + m_size * 0.5 + 18, width / 2, m_size * 0.5 - 26, fillColor);
+    m_canvas->setTextDatum(textdatum_t::bottom_right);
+    m_canvas->drawFloat(m_maxVal, dec, m_cx + m_size - 12, m_cy + m_size - 12);
+  }
 
   m_canvas->pushSprite(m_x, m_y, TFT_TRANSPARENT);
   m_canvas->deleteSprite();

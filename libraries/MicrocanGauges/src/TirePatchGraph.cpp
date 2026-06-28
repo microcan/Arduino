@@ -33,13 +33,14 @@ void TirePatchGraph::SetPrefs(int minT, int maxT)
 
 void TirePatchGraph::Update()
 {
+  byte r, g, b;
+
   m_canvas->createSprite(m_w, m_h);
 
   int w = m_w / m_zones;
-
+  float temp = 0;
   for (int i = 0; i < m_zones; i++)
   {
-    byte r, g, b;
     int index = i;
     if (m_flip)
     {
@@ -47,7 +48,18 @@ void TirePatchGraph::Update()
     }
     m_watched->ColorForValue(m_data[index], r, g, b);
     m_canvas->fillRect(w * i, 0, w, m_h, M5.Display.color565(r, g, b));
+    temp += m_data[index];
   }
+
+  temp = temp / m_zones / 2.0;
+  m_watched->ColorForValue(temp * 2.0, r, g, b);
+
+  // Value text
+  m_canvas->setFont(&fonts::Font8);
+  m_canvas->setTextSize(2);
+  m_canvas->setTextColor(M5.Display.color565(255-r, 255-g, 255-b));
+  m_canvas->setTextDatum(textdatum_t::middle_center);
+  m_canvas->drawFloat(temp, 0, m_w / 2, m_h / 2);
 
   m_canvas->pushSprite(m_x, m_y);
   m_canvas->deleteSprite();

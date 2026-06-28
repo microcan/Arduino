@@ -3,12 +3,12 @@
 
 #include <M5Unified.h>
 #include "Microcan.h"
-#include "AnalogGauge.h"
+#include "DigitalGauge.h"
 
 class Panel2x2
 {
 private:
-    AnalogGauge* m_gauges[4];
+    DigitalGauge* m_gauges[4];
     int m_x = 0;
     int m_y = 0;
     int m_w = 100;

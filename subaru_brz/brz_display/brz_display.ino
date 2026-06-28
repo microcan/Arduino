@@ -42,8 +42,8 @@ int freq = 4;
 TireGraph2Panel patch(zones, ASL.TireX.Temps);
 
 // Some watched values to drive gauges and ShiftX display
-WatchedValue oilP("Oil P", "Bar", 0, 10);
-WatchedValue oilT("Oil T", "deg C", 30, 55, 65, 120, 130, 150.0);
+WatchedValue oilP("Oil Press", "Bar", 0, 10);
+WatchedValue oilT("Oil Temp", "deg C", 30, 55, 65, 120, 130, 150.0);
 WatchedValue waterT("Water", "deg C", 30, 55, 65, 120, 130, 150.0);
 // different watched values for RPM gauge vs shift lights as we want different
 // low ends on te gauge (0) vs shift lights (4000)

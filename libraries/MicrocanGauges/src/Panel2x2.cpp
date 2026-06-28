@@ -5,10 +5,10 @@
 
 Panel2x2::Panel2x2(WatchedValue &tl, WatchedValue &tr, WatchedValue &bl, WatchedValue &br)
 {
-    m_gauges[0] = new AnalogGauge(tl);
-    m_gauges[1] = new AnalogGauge(tr);
-    m_gauges[2] = new AnalogGauge(bl);
-    m_gauges[3] = new AnalogGauge(br);
+    m_gauges[0] = new DigitalGauge(tl);
+    m_gauges[1] = new DigitalGauge(tr);
+    m_gauges[2] = new DigitalGauge(bl);
+    m_gauges[3] = new DigitalGauge(br);
     m_canvas = new M5Canvas(&M5.Lcd);
     SizeGauges();
 }
