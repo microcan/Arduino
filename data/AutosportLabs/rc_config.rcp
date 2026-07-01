@@ -1,0 +1,1756 @@
+{
+  "app_prefs": {
+    "alerts": {
+      "AccelX": {
+        "alert_rules": [],
+        "channel": "AccelX"
+      },
+      "AccelY": {
+        "alert_rules": [],
+        "channel": "AccelY"
+      },
+      "Speed": {
+        "alert_rules": [],
+        "channel": "Speed"
+      }
+    },
+    "analysis": {
+      "analysis_55a1f1af-eab2-11ec-9579-bbc70a0fc534": {
+        "dash_name": "Time Gap",
+        "dash_type": "flowgauge",
+        "gauges": [
+          [
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Track Map"
+                },
+                "Heat": {},
+                "Splitter height": 375,
+                "Track": {
+                  "last_center": [
+                    45.304131,
+                    -76.673164
+                  ]
+                }
+              }
+            }
+          ],
+          [
+            {
+              "config": {
+                "Channel": {
+                  "channel": [
+                    "Speed"
+                  ]
+                },
+                "Gauge Type": {
+                  "gauge": "Line Chart"
+                },
+                "Splitter height": 375
+              }
+            }
+          ],
+          [
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Time Gap"
+                },
+                "Splitter height": 375
+              }
+            }
+          ]
+        ],
+        "locked": true
+      },
+      "analysis_75c74460-eab2-11ec-a3bd-bbc70a0fc534": {
+        "dash_name": "Map/Speed/Traction",
+        "dash_type": "flowgauge",
+        "gauges": [
+          [
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Track Map"
+                },
+                "Heat": {},
+                "Splitter height": 375,
+                "Track": {
+                  "last_center": [
+                    45.304123,
+                    -76.673187
+                  ]
+                }
+              }
+            }
+          ],
+          [
+            {
+              "config": {
+                "Channel": {
+                  "channel": [
+                    "Speed"
+                  ],
+                  "overrides": {
+                    "Speed": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 170.0,
+                      "min_value": 50.0,
+                      "precision": 2
+                    }
+                  }
+                },
+                "Gauge Type": {
+                  "gauge": "Line Chart"
+                },
+                "Splitter height": 375
+              }
+            }
+          ]
+        ],
+        "locked": false
+      },
+      "analysis_7acfbe80-eab4-11ec-8662-bbc70a0fc534": {
+        "dash_name": "Map/Speed/Traction",
+        "dash_type": "flowgauge",
+        "gauges": [
+          [
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Track Map"
+                },
+                "Heat": {},
+                "Splitter height": 337,
+                "Track": {
+                  "last_center": [
+                    45.304123,
+                    -76.673187
+                  ]
+                }
+              }
+            },
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Scatter Plot"
+                },
+                "Heat": {},
+                "Splitter height": 337,
+                "X Axis": {
+                  "channel": "AccelX",
+                  "overrides": {
+                    "AccelX": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 2.0,
+                      "min_value": -2.0,
+                      "precision": 2
+                    }
+                  }
+                },
+                "Y Axis": {
+                  "channel": "AccelY",
+                  "overrides": {
+                    "AccelY": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 2.0,
+                      "min_value": -2.0,
+                      "precision": 2
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          [
+            {
+              "config": {
+                "Channel": {
+                  "channel": [
+                    "AccPed",
+                    "BrakRaw",
+                    "Speed"
+                  ],
+                  "overrides": {
+                    "Speed": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 180.0,
+                      "min_value": 0.0,
+                      "precision": 2
+                    }
+                  }
+                },
+                "Gauge Type": {
+                  "gauge": "Line Chart"
+                },
+                "Splitter height": 337
+              }
+            }
+          ]
+        ],
+        "locked": true
+      },
+      "dashboard_fd02a892-d2fb-11ea-b330-60a44c5f184c": {
+        "dash_name": "Map/Speed/Traction",
+        "dash_type": "flowgauge",
+        "gauges": [
+          [
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Track Map"
+                },
+                "Heat": {},
+                "Splitter height": 375,
+                "Track": {
+                  "last_center": [
+                    45.304123,
+                    -76.673187
+                  ]
+                }
+              }
+            },
+            {
+              "config": {
+                "Gauge Type": {
+                  "gauge": "Scatter Plot"
+                },
+                "Heat": {},
+                "Splitter height": 375,
+                "X Axis": {
+                  "channel": "AccelX",
+                  "overrides": {
+                    "AccelX": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 1.0,
+                      "min_value": -1.0,
+                      "precision": 2
+                    }
+                  }
+                },
+                "Y Axis": {
+                  "channel": "AccelY",
+                  "overrides": {
+                    "AccelY": {
+                      "autoselect_color": true,
+                      "base_color": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "max_value": 1.0,
+                      "min_value": -1.0,
+                      "precision": 2
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        ],
+        "locked": false
+      }
+    },
+    "dashboard": {
+      "dashboard_5139a04c-c0f7-11ec-b190-c03d03b7d3e5": {
+        "dash_name": "5x Gauge",
+        "dash_type": "freeform",
+        "gauges": [
+          {
+            "center_x": 0.11927083879709244,
+            "center_y": 0.2504715600876874,
+            "config": {
+              "Channel": {
+                "channel": "OilTemp"
+              },
+              "Gauge Type": {
+                "gauge": "Analog"
+              }
+            },
+            "size_hint_x": 0.234375,
+            "size_hint_y": 0.48270313757039435
+          },
+          {
+            "center_x": 0.12031249701976776,
+            "center_y": 0.7454751104445391,
+            "config": {
+              "Channel": {
+                "channel": "OilPress"
+              },
+              "Gauge Type": {
+                "gauge": "Analog"
+              }
+            },
+            "size_hint_x": 0.234375,
+            "size_hint_y": 0.48270313757039435
+          },
+          {
+            "center_x": 0.8776042461395264,
+            "center_y": 0.7495152555142399,
+            "config": {
+              "Channel": {
+                "channel": "Battery"
+              },
+              "Gauge Type": {
+                "gauge": "Analog"
+              }
+            },
+            "size_hint_x": 0.234375,
+            "size_hint_y": 0.48270313757039435
+          },
+          {
+            "center_x": 0.8828125,
+            "center_y": 0.2535731571731125,
+            "config": {
+              "Channel": {
+                "channel": "Coolant"
+              },
+              "Gauge Type": {
+                "gauge": "Analog"
+              }
+            },
+            "size_hint_x": 0.234375,
+            "size_hint_y": 0.48270313757039435
+          },
+          {
+            "center_x": 0.4963541775941849,
+            "center_y": 0.5028157683024941,
+            "config": {
+              "Channel": {
+                "channel": "RPM"
+              },
+              "Gauge Type": {
+                "gauge": "Analog"
+              }
+            },
+            "size_hint_x": 0.5130208432674408,
+            "size_hint_y": 1.0056315366049882
+          }
+        ],
+        "locked": true
+      },
+      "dashboard_f4beab04-d2fb-11ea-b330-60a44c5f184c": {
+        "dash_name": "Predictive Timer",
+        "dash_type": "freeform",
+        "gauges": [
+          {
+            "center_x": 0.185546875,
+            "center_y": 0.40225261464199524,
+            "config": {
+              "Channel": {
+                "channel": "BestLap",
+                "overrides": {
+                  "BestLap": {
+                    "autoselect_color": false,
+                    "base_color": [
+                      1,
+                      0.09999999999999998,
+                      0.775,
+                      1.0
+                    ],
+                    "max_value": 0,
+                    "min_value": 0,
+                    "precision": 4
+                  }
+                }
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            },
+            "size_hint_x": 0.37109375,
+            "size_hint_y": 0.24135156878519717
+          },
+          {
+            "center_x": 0.498046875,
+            "center_y": 0.3821399839098954,
+            "config": {
+              "Channel": {
+                "channel": "CurrentLap"
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            },
+            "size_hint_x": 0.21484375,
+            "size_hint_y": 0.20112630732099762
+          },
+          {
+            "center_x": 0.498046875,
+            "center_y": 0.6436041834271924,
+            "config": {
+              "Channel": {
+                "channel": "PredTime",
+                "overrides": {
+                  "PredTime": {
+                    "autoselect_color": false,
+                    "base_color": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "max_value": 0,
+                    "min_value": 0,
+                    "precision": 4
+                  }
+                }
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            },
+            "size_hint_x": 0.52734375,
+            "size_hint_y": 0.3218020917135962
+          },
+          {
+            "center_x": 0.498046875,
+            "center_y": 0.8793242156074013,
+            "config": {
+              "Gauge Type": {
+                "gauge": "Time Delta"
+              }
+            },
+            "size_hint_x": 0.99609375,
+            "size_hint_y": 0.24135156878519717
+          },
+          {
+            "center_x": 0.810546875,
+            "center_y": 0.40225261464199524,
+            "config": {
+              "Channel": {
+                "channel": "LapTime",
+                "overrides": {
+                  "LapTime": {
+                    "autoselect_color": false,
+                    "base_color": [
+                      0.9,
+                      0.675,
+                      0.0,
+                      1.0
+                    ],
+                    "max_value": 0,
+                    "min_value": 0,
+                    "precision": 4
+                  }
+                }
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            },
+            "size_hint_x": 0.37109375,
+            "size_hint_y": 0.24135156878519717
+          },
+          {
+            "center_x": 0.498046875,
+            "center_y": 0.14078841512469834,
+            "config": {
+              "Channel": {
+                "channel": "SessionTime",
+                "overrides": {
+                  "SessionTime": {
+                    "autoselect_color": false,
+                    "base_color": [
+                      0.0,
+                      0.15,
+                      0.6,
+                      1.0
+                    ],
+                    "max_value": 0,
+                    "min_value": 0,
+                    "precision": 4
+                  }
+                }
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            },
+            "size_hint_x": 0.64453125,
+            "size_hint_y": 0.28157683024939667
+          }
+        ],
+        "locked": true
+      },
+      "dashboard_fd02a892-d2fb-11ea-b330-60a44c5f184c": {
+        "dash_name": "Raw Channels",
+        "dash_type": "freeform",
+        "gauges": [
+          {
+            "center_x": 0.5,
+            "center_y": 0.5,
+            "config": {
+              "Gauge Type": {
+                "gauge": "Raw Channels"
+              }
+            },
+            "size_hint_x": 1,
+            "size_hint_y": 1
+          }
+        ],
+        "locked": true
+      }
+    },
+    "dashboard_bar": {
+      "gauges": {
+        "gauges": [
+          {
+            "config": {
+              "Channel": {
+                "channel": "Utc"
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            }
+          },
+          {
+            "config": {
+              "Channel": {
+                "channel": "CurrentLap"
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            }
+          },
+          {
+            "config": {
+              "Channel": {
+                "channel": "SessionTime"
+              },
+              "Gauge Type": {
+                "gauge": "Digital"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "general_prefs": {
+      "analysis_map": {
+        "track_selections": "5149e39de4945b6b069c93e4"
+      },
+      "analysis_preferences": {
+        "selected_analysis_channels": "Speed",
+        "selected_sessions_laps": "{\"sessions\": {\"19\": {\"selected_laps\": [5, 4]}}}"
+      },
+      "dashboard_preferences": {
+        "alerts_dwell_time": "2",
+        "alerts_minimize_time": "5",
+        "camera_preferences": "{'0': '', '1': ''}",
+        "last_channel_meta": "[{\"nm\": \"Interval\", \"ut\": \"ms\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 1, \"type\": 0}, {\"nm\": \"Utc\", \"ut\": \"ms\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 1, \"type\": 0}, {\"nm\": \"OilPRaw\", \"ut\": \"Bar\", \"min\": 0.0, \"max\": 10.0, \"prec\": 2, \"sr\": 5, \"type\": 0}, {\"nm\": \"Battery\", \"ut\": \"Volts\", \"min\": 0.0, \"max\": 20.0, \"prec\": 2, \"sr\": 1, \"type\": 0}, {\"nm\": \"AccelX\", \"ut\": \"G\", \"min\": -3.0, \"max\": 3.0, \"prec\": 2, \"sr\": 10, \"type\": 0}, {\"nm\": \"AccelY\", \"ut\": \"G\", \"min\": -3.0, \"max\": 3.0, \"prec\": 2, \"sr\": 10, \"type\": 0}, {\"nm\": \"AccelZ\", \"ut\": \"G\", \"min\": -3.0, \"max\": 3.0, \"prec\": 2, \"sr\": 10, \"type\": 0}, {\"nm\": \"Yaw\", \"ut\": \"Deg/Sec\", \"min\": -120, \"max\": 120, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"Pitch\", \"ut\": \"Deg/Sec\", \"min\": -120, \"max\": 120, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"Roll\", \"ut\": \"Deg/Sec\", \"min\": -120, \"max\": 120, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"RPM\", \"ut\": \"\", \"min\": 0, \"max\": 10000, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"AccPed\", \"ut\": \"%\", \"min\": 0, \"max\": 100, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"BrakRaw\", \"ut\": \"\", \"min\": 0, \"max\": 100, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"OilTemp\", \"ut\": \"C\", \"min\": -40, \"max\": 300, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"Coolant\", \"ut\": \"C\", \"min\": -40, \"max\": 300, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"CluPed\", \"ut\": \"\", \"min\": 0, \"max\": 1, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"Steering\", \"ut\": \"deg\", \"min\": -180, \"max\": 180, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"WSFL\", \"ut\": \"kph\", \"min\": 0, \"max\": 200, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"WSFR\", \"ut\": \"kph\", \"min\": 0, \"max\": 200, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"WSRL\", \"ut\": \"kph\", \"min\": 0, \"max\": 200, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"WSRR\", \"ut\": \"kph\", \"min\": 0, \"max\": 200, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"OilPress\", \"ut\": \"Bar\", \"min\": 0.0, \"max\": 10.0, \"prec\": 1, \"sr\": 10, \"type\": 0}, {\"nm\": \"Latitude\", \"ut\": \"Degrees\", \"min\": -180.0, \"max\": 180.0, \"prec\": 6, \"sr\": 5, \"type\": 0}, {\"nm\": \"Longitude\", \"ut\": \"Degrees\", \"min\": -180.0, \"max\": 180.0, \"prec\": 6, \"sr\": 5, \"type\": 0}, {\"nm\": \"Speed\", \"ut\": \"kph\", \"min\": 0.0, \"max\": 150.0, \"prec\": 2, \"sr\": 5, \"type\": 0}, {\"nm\": \"Altitude\", \"ut\": \"m\", \"min\": 0.0, \"max\": 4000.0, \"prec\": 1, \"sr\": 5, \"type\": 0}, {\"nm\": \"GPSSats\", \"ut\": \"\", \"min\": 0, \"max\": 20, \"prec\": 0, \"sr\": 5, \"type\": 0}, {\"nm\": \"GPSQual\", \"ut\": \"\", \"min\": 0, \"max\": 5, \"prec\": 0, \"sr\": 5, \"type\": 0}, {\"nm\": \"GPSDOP\", \"ut\": \"\", \"min\": 0.0, \"max\": 20.0, \"prec\": 1, \"sr\": 5, \"type\": 0}, {\"nm\": \"LapCount\", \"ut\": \"\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"LapTime\", \"ut\": \"Min\", \"min\": 0.0, \"max\": 0.0, \"prec\": 4, \"sr\": 10, \"type\": 0}, {\"nm\": \"Sector\", \"ut\": \"\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"SectorTime\", \"ut\": \"Min\", \"min\": 0.0, \"max\": 0.0, \"prec\": 4, \"sr\": 10, \"type\": 0}, {\"nm\": \"PredTime\", \"ut\": \"Min\", \"min\": 0.0, \"max\": 0.0, \"prec\": 4, \"sr\": 10, \"type\": 0}, {\"nm\": \"ElapsedTime\", \"ut\": \"Min\", \"min\": 0.0, \"max\": 0.0, \"prec\": 4, \"sr\": 10, \"type\": 0}, {\"nm\": \"CurrentLap\", \"ut\": \"\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 10, \"type\": 0}, {\"nm\": \"BestLap\", \"ut\": \"Min\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 1, \"type\": 4}, {\"nm\": \"LapDelta\", \"ut\": \"Min\", \"min\": 0, \"max\": 0, \"prec\": 0, \"sr\": 1, \"type\": 5}]",
+        "last_dash_screen": "dashboard_5139a04c-c0f7-11ec-b190-c03d03b7d3e5",
+        "pitstoptimer_alert_speed": "25",
+        "pitstoptimer_enabled": "1",
+        "pitstoptimer_exit_speed": "55",
+        "pitstoptimer_trigger_speed": "5",
+        "pittocaralerts_enabled": "1",
+        "pittocaralerts_timeout": "60",
+        "remote_dash_nav_enabled": "1"
+      },
+      "help": {
+        "analysis_welcome": "False",
+        "dashboard_gauge_help": "False",
+        "lap_setup": "False",
+        "rc_write_config": "False"
+      },
+      "preferences": {
+        "config_file_dir": "/storage/emulated/0/racecapture",
+        "conn_type": "Bluetooth",
+        "dbc_file_dir": "/storage/emulated/0/racecapture",
+        "display_orientation": "Any",
+        "distance_units": "miles",
+        "export_file_dir": "/storage/emulated/0/racecapture",
+        "firmware_dir": "/storage/emulated/0/racecapture",
+        "full_screen_mode": "1",
+        "global_help": "True",
+        "import_datalog_dir": "/storage/emulated/0/racecapture",
+        "import_image_dir": "/storage/emulated/0/racecapture",
+        "import_video_dir": "/storage/emulated/0/racecapture",
+        "last_known_device": "Boxy",
+        "preset_file_dir": "/storage/emulated/0/racecapture",
+        "record_session": "1",
+        "send_telemetry": "0",
+        "show_laptimes": "1",
+        "startup_screen": "Dashboard",
+        "temperature_units": "Fahrenheit"
+      },
+      "setup": {
+        "setup_enabled": "False"
+      },
+      "track_detection": {
+        "last_selected_track_id": "0",
+        "last_selected_track_timestamp": "0",
+        "user_cancelled_location": "45.355824,-75.763741"
+      }
+    }
+  },
+  "rcpCfg": {
+    "analogCfg": {
+      "0": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog1",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "1": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog2",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "2": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog3",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "3": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog4",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "4": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog5",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "5": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 5.0,
+        "min": 0.0,
+        "nm": "Analog6",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 0,
+        "ut": "Volts"
+      },
+      "6": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            0.47,
+            5.0,
+            5.0,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            0.0,
+            10.0,
+            10.0,
+            10.0
+          ]
+        },
+        "max": 10.0,
+        "min": 0.0,
+        "nm": "OilPRaw",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 2,
+        "scaling": 1.0,
+        "sr": 5,
+        "ut": "Bar"
+      },
+      "7": {
+        "alpha": 1.0,
+        "map": {
+          "raw": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ],
+          "scal": [
+            0.0,
+            1.25,
+            2.5,
+            3.75,
+            5.0
+          ]
+        },
+        "max": 20.0,
+        "min": 0.0,
+        "nm": "Battery",
+        "offset": 0.0,
+        "prec": 2,
+        "scalMod": 1,
+        "scaling": 1.0,
+        "sr": 1,
+        "ut": "Volts"
+      }
+    },
+    "camCtrlCfg": {
+      "channel": "Speed",
+      "en": false,
+      "makeModel": 0,
+      "start": {
+        "gt": true,
+        "thresh": 15.0,
+        "time": 5
+      },
+      "stop": {
+        "gt": false,
+        "thresh": 10.0,
+        "time": 10
+      }
+    },
+    "canCfg": {
+      "baud": [
+        500000,
+        500000
+      ],
+      "en": 1,
+      "term": [
+        0,
+        0
+      ]
+    },
+    "canChanCfg": {
+      "chans": [
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 2.55,
+          "filtId": 0,
+          "id": 320,
+          "idMask": 0,
+          "len": 1,
+          "max": 100,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "AccPed",
+          "offset": 0,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "%"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 1.0,
+          "filtId": 0,
+          "id": 209,
+          "idMask": 0,
+          "len": 1,
+          "max": 100,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "BrakRaw",
+          "offset": 2,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": ""
+        },
+        {
+          "add": -40.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 1.0,
+          "filtId": 0,
+          "id": 864,
+          "idMask": 0,
+          "len": 1,
+          "max": 300,
+          "min": -40,
+          "mult": 1.0,
+          "nm": "OilTemp",
+          "offset": 2,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "C"
+        },
+        {
+          "add": -40.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 1.0,
+          "filtId": 0,
+          "id": 864,
+          "idMask": 0,
+          "len": 1,
+          "max": 300,
+          "min": -40,
+          "mult": 1.0,
+          "nm": "Coolant",
+          "offset": 3,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "C"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": true,
+          "bus": 0,
+          "div": 1.0,
+          "filtId": 0,
+          "id": 320,
+          "idMask": 0,
+          "len": 1,
+          "max": 1,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "CluPed",
+          "offset": 8,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": ""
+        },
+        {
+          "add": 0.0,
+          "bigEndian": true,
+          "bm": false,
+          "bus": 0,
+          "div": 10.0,
+          "filtId": 0,
+          "id": 24,
+          "idMask": 0,
+          "len": 2,
+          "max": 180,
+          "min": -180,
+          "mult": -1.0,
+          "nm": "Steering",
+          "offset": 0,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 1,
+          "ut": "deg"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 17.4,
+          "filtId": 0,
+          "id": 212,
+          "idMask": 0,
+          "len": 2,
+          "max": 200,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "WSFL",
+          "offset": 0,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "kph"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 17.4,
+          "filtId": 0,
+          "id": 212,
+          "idMask": 0,
+          "len": 2,
+          "max": 200,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "WSFR",
+          "offset": 2,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "kph"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 17.4,
+          "filtId": 0,
+          "id": 212,
+          "idMask": 0,
+          "len": 2,
+          "max": 200,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "WSRL",
+          "offset": 4,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "kph"
+        },
+        {
+          "add": 0.0,
+          "bigEndian": false,
+          "bm": false,
+          "bus": 0,
+          "div": 17.4,
+          "filtId": 0,
+          "id": 212,
+          "idMask": 0,
+          "len": 2,
+          "max": 200,
+          "min": 0,
+          "mult": 1.0,
+          "nm": "WSRR",
+          "offset": 6,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": "kph"
+        }
+      ],
+      "en": 1
+    },
+    "capabilities": {
+      "channels": {
+        "analog": 8,
+        "can": 2,
+        "canChan": 100,
+        "gpio": 3,
+        "imu": 7,
+        "pwm": 4,
+        "timer": 3
+      },
+      "db": {
+        "script": 16384,
+        "tracks": 160
+      },
+      "flags": [
+        "activetrack",
+        "adc",
+        "bt",
+        "can",
+        "cell",
+        "gpio",
+        "gps",
+        "imu",
+        "lua",
+        "obd2",
+        "pwm",
+        "telemstream",
+        "timer",
+        "tracks",
+        "usb",
+        "wifi"
+      ],
+      "sampleRates": {
+        "gps": 50,
+        "sensor": 1000
+      }
+    },
+    "connCfg": {
+      "btCfg": {
+        "btEn": 1,
+        "name": "",
+        "pass": ""
+      },
+      "cellCfg": {
+        "apnHost": "epc.tmobile.com",
+        "apnPass": "",
+        "apnUser": "",
+        "cellEn": 0,
+        "profile": ""
+      },
+      "telCfg": {
+        "bgStream": 1,
+        "deviceId": ""
+      }
+    },
+    "gpioCfg": {
+      "0": {
+        "max": 1.0,
+        "min": 0.0,
+        "mode": 0,
+        "nm": "GPIO1",
+        "prec": 1,
+        "sr": 0,
+        "ut": ""
+      },
+      "1": {
+        "max": 1.0,
+        "min": 0.0,
+        "mode": 0,
+        "nm": "GPIO2",
+        "prec": 1,
+        "sr": 0,
+        "ut": ""
+      },
+      "2": {
+        "max": 1.0,
+        "min": 0.0,
+        "mode": 0,
+        "nm": "GPIO3",
+        "prec": 1,
+        "sr": 0,
+        "ut": ""
+      }
+    },
+    "gpsCfg": {
+      "alt": 1,
+      "dop": 1,
+      "pos": 1,
+      "qual": 1,
+      "sats": 1,
+      "speed": 1,
+      "sr": 5
+    },
+    "imuCfg": {
+      "0": {
+        "alpha": 0.1,
+        "chan": 1,
+        "max": 3.0,
+        "min": -3.0,
+        "mode": 1,
+        "nm": "AccelX",
+        "prec": 2,
+        "sr": 10,
+        "ut": "G",
+        "zeroVal": -362
+      },
+      "1": {
+        "alpha": 0.1,
+        "chan": 0,
+        "max": 3.0,
+        "min": -3.0,
+        "mode": 1,
+        "nm": "AccelY",
+        "prec": 2,
+        "sr": 10,
+        "ut": "G",
+        "zeroVal": 459
+      },
+      "2": {
+        "alpha": 0.1,
+        "chan": 2,
+        "max": 3.0,
+        "min": -3.0,
+        "mode": 1,
+        "nm": "AccelZ",
+        "prec": 2,
+        "sr": 10,
+        "ut": "G",
+        "zeroVal": 635
+      },
+      "3": {
+        "alpha": 0.1,
+        "chan": 3,
+        "max": 120,
+        "min": -120,
+        "mode": 1,
+        "nm": "Yaw",
+        "prec": 0,
+        "sr": 10,
+        "ut": "Deg/Sec",
+        "zeroVal": -9
+      },
+      "4": {
+        "alpha": 0.1,
+        "chan": 4,
+        "max": 120,
+        "min": -120,
+        "mode": 1,
+        "nm": "Pitch",
+        "prec": 0,
+        "sr": 10,
+        "ut": "Deg/Sec",
+        "zeroVal": -171
+      },
+      "5": {
+        "alpha": 0.1,
+        "chan": 5,
+        "max": 120,
+        "min": -120,
+        "mode": 1,
+        "nm": "Roll",
+        "prec": 0,
+        "sr": 10,
+        "ut": "Deg/Sec",
+        "zeroVal": -29
+      }
+    },
+    "lapCfg": {
+      "bestLap": {
+        "max": 0.0,
+        "min": 0.0,
+        "nm": "BestLap",
+        "prec": 4,
+        "sr": 10,
+        "ut": "Min"
+      },
+      "currentLap": {
+        "max": 0,
+        "min": 0,
+        "nm": "CurrentLap",
+        "prec": 0,
+        "sr": 10,
+        "ut": ""
+      },
+      "dist": {
+        "max": 0,
+        "min": 0,
+        "nm": "Distance",
+        "prec": 2,
+        "sr": 0,
+        "ut": "km"
+      },
+      "elapsedTime": {
+        "max": 0,
+        "min": 0,
+        "nm": "ElapsedTime",
+        "prec": 4,
+        "sr": 0,
+        "ut": "Min"
+      },
+      "lapCount": {
+        "max": 0,
+        "min": 0,
+        "nm": "LapCount",
+        "prec": 0,
+        "sr": 10,
+        "ut": ""
+      },
+      "lapTime": {
+        "max": 0,
+        "min": 0,
+        "nm": "LapTime",
+        "prec": 4,
+        "sr": 10,
+        "ut": "Min"
+      },
+      "predTime": {
+        "max": 0,
+        "min": 0,
+        "nm": "PredTime",
+        "prec": 4,
+        "sr": 10,
+        "ut": "Min"
+      },
+      "sector": {
+        "max": 0,
+        "min": 0,
+        "nm": "Sector",
+        "prec": 0,
+        "sr": 10,
+        "ut": ""
+      },
+      "sectorTime": {
+        "max": 0,
+        "min": 0,
+        "nm": "SectorTime",
+        "prec": 4,
+        "sr": 10,
+        "ut": "Min"
+      },
+      "sessionTime": {
+        "max": 0,
+        "min": 0,
+        "nm": "SessionTime",
+        "prec": 4,
+        "sr": 0,
+        "ut": "Min"
+      }
+    },
+    "obd2Cfg": {
+      "en": 1,
+      "pids": [
+        {
+          "add": 0.0,
+          "bigEndian": true,
+          "bm": false,
+          "bus": 0,
+          "div": 4.0,
+          "filtId": 0,
+          "id": 2024,
+          "idMask": 0,
+          "len": 2,
+          "max": 10000,
+          "min": 0,
+          "mode": 1,
+          "mult": 1.0,
+          "nm": "RPM",
+          "offset": 3,
+          "pass": false,
+          "pid": 12,
+          "prec": 0,
+          "sr": 10,
+          "subId": -1,
+          "type": 0,
+          "ut": ""
+        }
+      ]
+    },
+    "pwmCfg": {
+      "0": {
+        "logMode": 1,
+        "max": 100,
+        "min": 0,
+        "nm": "PWM1",
+        "outMode": 1,
+        "prec": 0,
+        "sr": 0,
+        "stDutyCyc": 50,
+        "stPeriod": 100,
+        "ut": ""
+      },
+      "1": {
+        "logMode": 1,
+        "max": 100,
+        "min": 0,
+        "nm": "PWM2",
+        "outMode": 1,
+        "prec": 0,
+        "sr": 0,
+        "stDutyCyc": 50,
+        "stPeriod": 100,
+        "ut": ""
+      },
+      "2": {
+        "logMode": 1,
+        "max": 100,
+        "min": 0,
+        "nm": "PWM3",
+        "outMode": 1,
+        "prec": 0,
+        "sr": 0,
+        "stDutyCyc": 50,
+        "stPeriod": 100,
+        "ut": ""
+      }
+    },
+    "scriptCfg": {
+      "data": "-- run script at 50Hz\nsetTickRate(10)\n\n-- add a calculated channels\ng_idOil = addChannel(\"OilPress\", 10, 1, 0, 10, \"Bar\")\n\n-- calculate a smoothed oil pressure value\ng_smooth = 0\nfunction smoothOil()\n  local new = getAnalog(6)\n  g_smooth = 0.9 * g_smooth + 0.1 * new\n  --println(\"raw:\" ..new ..\" smooth:\" ..smooth)\n  setChannel(g_idOil, g_smooth)\nend\n\n--make a fake rpm for testing\ng_count = 0\ng_delta = 100\ng_fakeRpm = 4000\nfunction getFakeRpm()\n  g_count = g_count +1\n  if g_count == 4 then\n    if g_fakeRpm >= 7400 then\n      g_delta = -100\n    end\n    if g_fakeRpm <= 4000 then\n       g_delta = 100\n    end\n    g_fakeRpm = g_fakeRpm + g_delta\n    g_count = 0\n    println(g_fakeRpm)\n  end\n  return g_fakeRpm\nend\n\n--update the light strip\nfunction setLightsGYR(g, y, r)\n  red = 0\n  yellow = 1\n  green = 2\n  setGpio(green, g)\n  setGpio(yellow, y)\n  setGpio(red, r)\nend\n\ng_rpm = 0\nfunction readRPM()\n  done = 0\n  repeat\n    --println(\"readRPM repeat\")\n    id, ext, data = rxCAN(0, 1000)\n    if id == 2024 then\n      done = 1\n      --print(\"id: \" ..id ..\" - \")\n      --for i = 1,#data do\n      --  print(data[i] ..\", \")\n      --end\n      --println(\"\")\n      g_rpm = (data[4] * 256 + data[5])/4\n      --println(\"rpm: \"..rpm)\n    end\n  until done > 0\nend\n\ng_flash = 0\nfunction updateLights()\n  on = 1\n  off = 0\n  if g_flash == 0 then g_flash = 1 else g_flash = 0 end\n  flash = g_flash\n\n  --rpm = getFakeRpm()\n  --rpm = getChannel(\"RPM\")\n  readRPM()\n  rpm = g_rpm\n  --println(\"rpm: \"..rpm)\n  if rpm <= 5000 then\n    setLightsGYR(off, off, off)\n  elseif rpm <= 6000 then\n    setLightsGYR(on, off, off)\n  elseif rpm <= 6500 then\n    setLightsGYR(off, on, off)\n  elseif rpm <= 7000 then\n    setLightsGYR(off, off, on)\n  else\n    setLightsGYR(flash, flash, on)\n  end \nend\n\nfunction outputCAN()\n  repeat\n    id, ext, data = rxCAN(0, 1000)\n    if id == 212 then\n      print(\"id: \" ..id ..\" - \")\n      for i = 1,#data do\n        print(data[i] ..\", \")\n      end\n      println(\"\")\n    end\n  until id == nil\nend\n\nfunction unknownCAN()\n  repeat\n    id, ext, data = rxCAN(0, 1000)\n    if ((id ~= 320) and (id ~= 209)\n        and (id ~= 321) and (id ~= 24)\n        and (id > 899) and (id < 10000)) then\n      print(\"id: \" ..id ..\" - \")\n      for i = 1,#data do\n        print(data[i] ..\", \")\n      end\n      println(\"\")\n    end\n  until id == nil\nend\n\n-- tick\nfunction onTick() \n  --println(\"on tick\")\n  smoothOil()\n  updateLights()\n  --outputCAN()\n  --unknownCAN()\nend",
+      "page": null
+    },
+    "sdLogCtrlCfg": {
+      "channel": "Speed",
+      "en": false,
+      "start": {
+        "gt": true,
+        "thresh": 15.0,
+        "time": 5
+      },
+      "stop": {
+        "gt": false,
+        "thresh": 10.0,
+        "time": 10
+      }
+    },
+    "timerCfg": {
+      "0": {
+        "alpha": 1.0,
+        "max": 8000,
+        "min": 0,
+        "mode": 0,
+        "nm": "RPM",
+        "ppr": 1,
+        "prec": 0,
+        "speed": 1,
+        "sr": 0,
+        "st": 0,
+        "ut": "rpm"
+      },
+      "1": {
+        "alpha": 1.0,
+        "max": 8000,
+        "min": 0,
+        "mode": 0,
+        "nm": "RPM2",
+        "ppr": 1,
+        "prec": 0,
+        "speed": 1,
+        "sr": 0,
+        "st": 0,
+        "ut": "rpm"
+      },
+      "2": {
+        "alpha": 1.0,
+        "max": 8000,
+        "min": 0,
+        "mode": 0,
+        "nm": "RPM3",
+        "ppr": 1,
+        "prec": 0,
+        "speed": 1,
+        "sr": 0,
+        "st": 0,
+        "ut": "rpm"
+      }
+    },
+    "trackCfg": {
+      "autoDetect": 1,
+      "rad": 0.0001,
+      "track": {
+        "id": 1427687464,
+        "sec": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "sf": [
+          45.301838,
+          -76.673859
+        ],
+        "type": 0
+      }
+    },
+    "trackDb": {
+      "size": 2,
+      "tracks": [
+        {
+          "id": -1515870811,
+          "sec": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              60.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "sf": [
+            0,
+            0
+          ],
+          "type": 0
+        },
+        {
+          "id": 1427687464,
+          "sec": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "sf": [
+            45.301838,
+            -76.673859
+          ],
+          "type": 0
+        }
+      ]
+    },
+    "ver": {
+      "bugfix": 0,
+      "fname": "RaceCapture/Pro MK2",
+      "git_info": "2.12.0",
+      "major": 2,
+      "minor": 12,
+      "name": "RCP_MK2"
+    },
+    "wifiCfg": {
+      "active": false,
+      "ap": {
+        "active": true,
+        "channel": 11,
+        "encryption": "none",
+        "password": "",
+        "ssid": "RaceCapture/Pro MK2 337"
+      },
+      "client": {
+        "active": false,
+        "password": "",
+        "ssid": ""
+      }
+    }
+  }
+}

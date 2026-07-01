@@ -1,0 +1,126 @@
+-- run script at 50Hz
+setTickRate(10)
+
+-- add a calculated channels
+g_idOil = addChannel("OilPress", 10, 1, 0, 10, "Bar")
+
+-- calculate a smoothed oil pressure value
+g_smooth = 0
+function smoothOil()
+  local new = getAnalog(6)
+  g_smooth = 0.9 * g_smooth + 0.1 * new
+  --println("raw:" ..new .." smooth:" ..smooth)
+  setChannel(g_idOil, g_smooth)
+end
+  
+--make a fake rpm for testing
+g_count = 0
+g_delta = 100
+g_fakeRpm = 4000
+function getFakeRpm()
+  g_count = g_count +1
+  if g_count == 4 then
+    if g_fakeRpm >= 7400 then
+      g_delta = -100
+    end
+    if g_fakeRpm <= 4000 then
+       g_delta = 100
+    end
+    g_fakeRpm = g_fakeRpm + g_delta
+    g_count = 0
+    println(g_fakeRpm)
+  end
+  return g_fakeRpm
+end
+
+--update the light strip
+function setLightsGYR(g, y, r)
+  red = 0
+  yellow = 1
+  green = 2
+  setGpio(green, g)
+  setGpio(yellow, y)
+  setGpio(red, r)
+end
+
+g_rpm = 0
+function readRPM()
+  done = 0
+  repeat
+    --println("readRPM repeat")
+    id, ext, data = rxCAN(0, 1000)
+    if id == 2024 then
+      done = 1
+      --print("id: " ..id .." - ")
+      --for i = 1,#data do
+      --  print(data[i] ..", ")
+      --end
+      --println("")
+      g_rpm = (data[4] * 256 + data[5])/4
+     --println(\"rpm: \"..rpm)
+    end
+  until done > 0
+end
+
+g_flash = 0
+function updateLights()
+  on = 1
+  off = 0
+  if g_flash == 0 then g_flash = 1 else g_flash = 0 end
+  flash = g_flash
+
+  --rpm = getFakeRpm()
+  --rpm = getChannel(\"RPM\")
+  readRPM()
+  rpm = g_rpm
+  --println(\"rpm: \"..rpm)
+  if rpm <= 5000 then
+    setLightsGYR(off, off, off)
+  elseif rpm <= 6000 then
+    setLightsGYR(on, off, off)
+  elseif rpm <= 6500 then
+    setLightsGYR(off, on, off)
+  elseif rpm <= 7000 then
+    setLightsGYR(off, off, on)
+  else
+    setLightsGYR(flash, flash, on)
+  end 
+end
+
+function outputCAN()
+  repeat
+    id, ext, data = rxCAN(0, 1000)
+    if id == 212 then
+      print(\"id: \" ..id ..\" - \")
+      for i = 1,#data do
+        print(data[i] ..\", \")
+      end
+      println(\"\")
+    end
+  until id == nil
+end
+
+function unknownCAN()
+  repeat
+    id, ext, data = rxCAN(0, 1000)
+    if ((id ~= 320) and (id ~= 209)
+        and (id ~= 321) and (id ~= 24)
+        and (id > 899) and (id < 10000)) then
+      print(\"id: \" ..id ..\" - \")
+      for i = 1,#data do
+        print(data[i] ..\", \")
+      end
+      println(\"\")
+    end
+  until id == nil
+end
+
+-- tick
+function onTick() 
+  --println(\"on tick\")
+  smoothOil()
+  updateLights()
+  --outputCAN()
+  --unknownCAN()
+end",
+      
