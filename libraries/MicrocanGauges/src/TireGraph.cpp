@@ -14,10 +14,10 @@ TireGraph::TireGraph(int zones, byte data[4][16])
     m_canvas = new M5Canvas(&M5.Lcd);
     m_min = new WatchedValue("Tire", "2 x C", 0, 127);
     m_max = new WatchedValue("Tire", "2 x C", 0, 127);
-    m_patches[0] = new TirePatchGraph(m_zones, data[0], false);
-    m_patches[1] = new TirePatchGraph(m_zones, data[1], true);
-    m_patches[2] = new TirePatchGraph(m_zones, data[2], false);
-    m_patches[3] = new TirePatchGraph(m_zones, data[3], true);
+    m_patches[0] = new TirePatchGraph(m_zones, data[0], true);
+    m_patches[1] = new TirePatchGraph(m_zones, data[1], false);
+    m_patches[2] = new TirePatchGraph(m_zones, data[2], true);
+    m_patches[3] = new TirePatchGraph(m_zones, data[3], false);
     SetSize(0, 0, 400, 400);
     SetPrefs(0, 127);
 }

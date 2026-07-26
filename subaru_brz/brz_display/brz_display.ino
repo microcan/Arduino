@@ -95,7 +95,8 @@ void setup() {
   // 55-75 seems optmal
   // 45-85 as wide range
   // 90 as a max temp
-  patch.SetPrefs(50, 80);
+  patch.SetPrefs(40, 90);
+  //patch.SetPrefs(0, 40);
 
   // register callbacks and set prefs before connection
   ASL.ShiftX.RegisterButtonCallback(OnShiftXButton);
