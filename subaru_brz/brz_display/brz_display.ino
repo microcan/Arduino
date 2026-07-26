@@ -35,11 +35,11 @@ float g_pMax = 10.0;
 bool displayOnTop = true;
 
 //number of zones and update freq for TireX
-int zones = 8;
+int zones = 4;
 int freq = 4;
 
 // scaleable display for tire patches
-TireGraph2Panel patch(zones, ASL.TireX.Temps);
+TireGraph patch(zones, ASL.TireX.Temps);
 
 // Some watched values to drive gauges and ShiftX display
 WatchedValue oilP("Oil Press", "Bar", 0, 10);
@@ -59,11 +59,11 @@ Panel2x2 panel(oilT, waterT, oilP, rpm);
 void OnShiftXButton(int button, bool down) {
   // Scale the tire patches to current temp range
   if (button == 0 && down) {
-    patch.ScaleToRange();
+    patch.SetPrefs(40, 90);
   }
   // scale thetre patches to full range
   if (button == 1 && down) {
-    patch.SetPrefs(0, 127);
+    patch.SetPrefs(50, 80);
   }
 }
 
@@ -90,9 +90,12 @@ void setup() {
   // size the gauge display
   panel.SetSize(0, h - w, w, w);
 
-  // ideal operating range for a ventus rs4 is 80-95
-  // scale the tire temp display to a gradient for range 60 deg C to 105 degC
-  patch.SetPrefs(60, 105);
+  // Ventus RS4 ranges
+  // 50 is low end
+  // 55-75 seems optmal
+  // 45-85 as wide range
+  // 90 as a max temp
+  patch.SetPrefs(50, 80);
 
   // register callbacks and set prefs before connection
   ASL.ShiftX.RegisterButtonCallback(OnShiftXButton);

@@ -152,7 +152,7 @@ void DigitalGauge::DrawDynamic()
 
   // Value text
   SetFontSize(m_bigFont);
-  m_canvas->setTextSize(1.5);
+  m_canvas->setTextSize(1.7);
   m_canvas->setTextDatum(textdatum_t::middle_center);
   m_canvas->drawFloat(m_watched->Value, dec, m_cx, m_cy);
 

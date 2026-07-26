@@ -96,7 +96,7 @@ void TireGraph::Update()
         }
     }
 
-    DrawDynamic();
+    //DrawDynamic();
 }
 
 void TireGraph::DrawStatic()
